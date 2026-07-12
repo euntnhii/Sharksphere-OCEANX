@@ -32,7 +32,8 @@ Introduction (Onboarding) -> Activity 1 -> Learning Points -> Activity 2 -> Lear
 
 ### Setting up Activity 2 (Simulation):  
 #### Pre-requisites: 
-Node.js (LTS version recommended), npm  
+- Node.js (LTS version recommended)
+- npm  
 
 #### Installation:  
 ```bash
