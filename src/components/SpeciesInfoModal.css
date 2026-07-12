@@ -1,0 +1,169 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: white;
+    border-radius: 12px;
+    width: 80%;
+    max-width: 800px;
+    height: 70%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 2rem;
+}
+
+.species-title {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.shark-title {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-top: -18px;
+}
+
+.scientific-name {
+    margin-left: 6px;
+}
+
+.species-sprite {
+    height: 50px;
+    padding-left: 18px;
+    align-items: center;
+    font-weight: normal;
+}
+
+.shark-sprite {
+    height: 80px;
+    margin-left: -10px;
+    margin-top: 8px;
+    align-items: center;
+    font-weight: normal;
+}
+
+.simulation-effects {
+    border-radius: 20px;
+    padding: 1rem 1.5rem;
+    margin: 1.2rem 0;
+    text-align: left;
+    font-size: 19px;
+}
+
+.simulation-effects.status-green {
+    background: rgb(236, 253, 245);
+    border: 2px solid rgb(167, 243, 208);
+}
+
+.simulation-effects.status-yellow {
+    background: rgb(255, 251, 235);
+    border: 2px solid rgb(253, 230, 138);
+}
+
+.simulation-effects.status-red {
+    background: rgb(255, 241, 242);
+    border: 2px solid rgb(254, 205, 211);
+}
+
+.status-green p {
+    color: rgb(6, 95, 70)
+}
+
+.status-yellow p {
+    color: rgb(146, 64, 14)
+}
+
+.status-red p {
+    color: rgb(159, 18, 57)
+}
+
+.eco-status {
+    margin-left: 4px;
+    background: white;
+    border-radius: 8px;
+    padding: 4px 12px;
+}
+
+.eco-status.status-green {
+    background: rgb(209, 250, 229);
+    border: 2px solid rgb(167, 243, 208);
+}
+
+.eco-status.status-yellow {
+    background: rgb(254, 243, 199);
+    border: 2px solid rgb(253, 230, 138);
+}
+
+.eco-status.status-red {
+    background: rgb(255, 228, 230);
+    border: 2px solid rgb(254, 205, 211);
+}
+
+.shark-impact-message {
+    display: block;
+    margin-top: 6px;
+    font-size: 18px;
+}
+
+.content-part1 {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.content-part1 img {
+    width: 45%;
+    height: auto;
+}
+
+.content-info-part1 {
+    width: 55%;
+    text-align: left;
+    font-size: 19px;
+}
+
+.content-part2 {
+    text-align: left;
+    font-size: 19px;
+    padding-top: 20px;
+    height: 8rem;
+
+}
+
+.para {
+    display: block;
+    padding-top: 4px;
+    font-size: 18px;
+}
+
+.close-modal {
+    margin-top: 150px;
+    margin-bottom: 10px;
+    padding: 12px 100px;
+    background-color: rgb(90, 170, 255);
+    border: 2px solid rgb(165, 204, 255);
+    border-radius: 10px;
+    font-size: 16px;
+    color: rgb(255, 255, 255);
+}
+
+.close-modal:hover {
+    background-color: rgb(137, 191, 253);
+    cursor: pointer;
+}

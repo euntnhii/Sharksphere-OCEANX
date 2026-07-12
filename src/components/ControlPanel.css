@@ -1,0 +1,115 @@
+.control-panel {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 6px 6px rgba(0, 0, 0, 0.15);
+}
+
+.panel-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.population-section {
+    flex: 2;
+    margin-left: 40px;
+    text-align: left;
+}
+
+.species-name {
+    cursor: pointer;
+}
+
+@keyframes greenBlink {
+
+    0%,
+    100% {
+        text-shadow: none;
+    }
+
+    50% {
+        text-shadow: 0 0 10px rgb(62, 224, 148);
+    }
+}
+
+@keyframes yellowBlink {
+
+    0%,
+    100% {
+        text-shadow: none;
+    }
+
+    50% {
+        text-shadow: 0 0 10px rgb(250, 211, 16);
+    }
+}
+
+@keyframes redBlink {
+
+    0%,
+    100% {
+        text-shadow: none;
+    }
+
+    50% {
+        text-shadow: 0 0 10px rgb(232, 75, 94);
+    }
+}
+
+.blinking-green {
+    animation: greenBlink 1s infinite;
+}
+
+.blinking-yellow {
+    animation: yellowBlink 1s infinite;
+}
+
+.blinking-red {
+    animation: redBlink 1s infinite;
+}
+
+.slider-section {
+    flex: 3;
+    margin-right: 28px;
+}
+
+.slider-section h3 {
+    text-align: left;
+}
+
+.slider-container {
+    position: relative;
+    width: 100%;
+}
+
+.population-slider {
+    width: 92%;
+    appearance: none;
+    height: 8px;
+    border-radius: 999px;
+    background: #B3E5FC;
+    outline: none;
+}
+
+.population-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #1565C0;
+    cursor: pointer;
+}
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    color: #0D47A1;
+}
+
+.anomaly-indicator {
+    padding-top: 50px;
+}

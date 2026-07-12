@@ -30,4 +30,3 @@ Introduction (Onboarding) -> Activity 1 -> Learning Points -> Activity 2 -> Lear
 
 ## Installation Guide:  
 ### Step-by-step instructions on how to set up the project  
-
