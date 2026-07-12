@@ -29,4 +29,33 @@ Introduction (Onboarding) -> Activity 1 -> Learning Points -> Activity 2 -> Lear
 -Visitors also learn about different ecological roles within an ecosystem and how each of them gets affected shark populations  
 
 ## Installation Guide:  
-### Step-by-step instructions on how to set up the project  
+
+### Setting up Activity 2 (Simulation):  
+#### Pre-requisites: 
+Node.js (LTS version recommended), npm  
+
+#### Installation:  
+```bash
+git clone https://github.com/euntnhii/Sharksphere-OCEANX.git
+cd Sharksphere-OCEANX
+npm install
+```
+
+#### Running the project:  
+```bash
+npm run dev
+```
+
+Then open the local URL displayed in the terminal (typically `http://localhost:5173`).  
+
+#### Building  
+
+```bash
+npm run build
+```
+
+#### Previewing the production build  
+
+```bash
+npm run preview
+```
