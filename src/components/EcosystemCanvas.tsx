@@ -15,6 +15,22 @@ import { createCorals } from "../simulation/coralFactory";
 type EcosystemCanvasProps = {
     ecosystemState: EcosystemState;
     entities: EcosystemEntities; //canvas receives entities to draw based on ecosystem state
+    onSpeciesClick: (species: string) => void; //callback function to handle species click
+};
+
+function getSpeciesName(role: FishEntity["role"] | SharkEntity["role"]): string {
+    switch (role) {
+        case "apexPredator":
+            return "Blacktip Reef Shark";
+        case "turfBrusher":
+            return "Striated Surgeonfish";
+        case "herbScraper":
+            return "Bullethead Parrotfish";
+        case "invertHunter":
+            return "Manybar Goatfish";
+        case "smallInvert":
+            return "Cleaner Shrimp";
+    }
 };
 
 
@@ -30,14 +46,96 @@ export function EcosystemCanvas(props: EcosystemCanvasProps) {
         return assets.fish[entity.role]
     };
 
-
-
     useEffect(() => {
         //check if canvas exists
         if (!canvasRef.current) {
             return;
         } else {
             const canvas = canvasRef.current; //get canvas element (drawing surface)
+
+            function isPointInEntity(
+                mouseX: number,
+                mouseY: number,
+                entity: {
+                    x: number;
+                    y: number;
+                    role: keyof typeof speciesConfig;
+                }
+            ) {
+                const config = speciesConfig[entity.role];
+                const centerX = entity.x + config.drawWidth / 2;
+                const centerY = entity.y + config.drawHeight / 2;
+                const radiusX = config.clickWidth / 2;
+                const radiusY = config.clickHeight / 2;
+                const dx = mouseX - centerX;
+                const dy = mouseY - centerY;
+
+                return (
+                    (dx * dx) / (radiusX * radiusX) + (dy * dy) / (radiusY * radiusY) <= 1
+                );
+            }
+
+            function isPointInCoral(
+                mouseX: number,
+                mouseY: number,
+                coral: typeof coralRef.current[number]
+            ) {
+                const config = coralConfig[coral.species];
+
+                const centerX = coral.x + config.width / 2;
+                const centerY = coral.y + config.height / 2;
+
+                const radiusX = config.clickWidth / 2;
+                const radiusY = config.clickHeight / 2;
+
+                const dx = mouseX - centerX;
+                const dy = mouseY - centerY;
+
+                return (
+                    (dx * dx) / (radiusX * radiusX) + (dy * dy) / (radiusY * radiusY) <= 1
+                );
+            }
+
+            function handleCanvasClick(event: MouseEvent) {
+                const rect = canvas.getBoundingClientRect();
+
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+
+                const mouseX = (event.clientX - rect.left) * scaleX;
+                const mouseY = (event.clientY - rect.top) * scaleY;
+
+                //check sharks
+                for (let i = props.entities.sharks.length - 1; i >= 0; i--) {
+                    const shark = props.entities.sharks[i];
+
+                    if (isPointInEntity(mouseX, mouseY, shark)) {
+                        props.onSpeciesClick(getSpeciesName(shark.role));
+                        return;
+                    }
+                };
+
+                //check fishes
+                for (let i = props.entities.fishes.length - 1; i >= 0; i--) {
+                    const fish = props.entities.fishes[i];
+
+                    if (isPointInEntity(mouseX, mouseY, fish)) {
+                        console.log("Clicked:", fish.role, fish);
+                        console.log(props.entities.fishes)
+                        props.onSpeciesClick(getSpeciesName(fish.role));
+                        return;
+                    }
+                };
+
+                //check corals
+                for (const coral of coralRef.current) {
+                    if (isPointInCoral(mouseX, mouseY, coral)) {
+                        props.onSpeciesClick("Reef Builder");
+                        return;
+                    };
+                };
+            };
+
             const context = canvas.getContext("2d"); //create context (object that contains drawing methods and properties)
 
             //check if context exists
@@ -188,9 +286,13 @@ export function EcosystemCanvas(props: EcosystemCanvasProps) {
                     animationFrameIdRef.current = requestAnimationFrame(animate);
                 };
 
+                //add event listener for canvas click
+                canvas.addEventListener("click", handleCanvasClick);
 
                 //cleanup function (stop animation when component unmounts)
                 return () => {
+                    canvas.removeEventListener("click", handleCanvasClick); //remove event listener
+
                     if (animationFrameIdRef.current === null) {
                         return;
                     } else {

@@ -9,6 +9,7 @@ type ControlPanelProps = {
     ecosystemState: EcosystemState;
     anomalyResult: AnomalyResult;
     onSliderChange: (sharkPopulation: number) => void;
+    onSpeciesClick: (species: string) => void;
 };
 
 
@@ -16,6 +17,7 @@ export function ControlPanel({
     ecosystemState,
     anomalyResult,
     onSliderChange,
+    onSpeciesClick,
 }: ControlPanelProps) {
 
     function getSpeciesColor(species: string) {
@@ -30,7 +32,6 @@ export function ControlPanel({
         return `${colorClass} ${blinkingClass}`;
     }
 
-    const [selectedSpecies, setSelectedSpecies] = useState<string | null>(null); //state to track which species is selected for the modal
     const [blinkingSpecies, setBlinkingSpecies] = useState<string[]>([]); //state to track species that are blinking
     const allSpecies = ["Blacktip Reef Shark", "Striated Surgeonfish", "Bullethead Parrotfish", "Manybar Goatfish", "Cleaner Shrimp", "Reef Builder"];
 
@@ -43,7 +44,7 @@ export function ControlPanel({
     };
 
     function handleSpeciesClick(species: string) {
-        setSelectedSpecies(species);
+        onSpeciesClick(species);
         setBlinkingSpecies(current => current.filter(name => name !== species)); //remove species from blinking when clicked
     };
 
@@ -125,11 +126,6 @@ export function ControlPanel({
 
                 </div>
 
-                <SpeciesInfoModal
-                    species={selectedSpecies}
-                    ecosystemState={ecosystemState}
-                    onClose={() => setSelectedSpecies(null)}
-                />
 
                 {/* Right Section (Shark slider and anomaly score) */}
                 <div className="slider-section">

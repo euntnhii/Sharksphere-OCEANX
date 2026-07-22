@@ -4,6 +4,8 @@ export const speciesConfig = {
     apexPredator: {
         drawWidth: 260,
         drawHeight: 200,
+        clickWidth: 150,
+        clickHeight: 60,
         baseSpeed: 1.0,
         schooling: {
             enabled: false,
@@ -21,6 +23,8 @@ export const speciesConfig = {
     turfBrusher: {
         drawWidth: 40,
         drawHeight: 32,
+        clickWidth: 28,
+        clickHeight: 16,
         baseSpeed: 0.28,
         schooling: {
             enabled: true,
@@ -38,6 +42,8 @@ export const speciesConfig = {
     herbScraper: {
         drawWidth: 60,
         drawHeight: 48,
+        clickWidth: 42,
+        clickHeight: 22,
         baseSpeed: 0.35,
         schooling: {
             enabled: true,
@@ -55,6 +61,8 @@ export const speciesConfig = {
     invertHunter: {
         drawWidth: 53,
         drawHeight: 42,
+        clickWidth: 38,
+        clickHeight: 18,
         baseSpeed: 0.3,
         schooling: {
             enabled: true,
@@ -72,6 +80,8 @@ export const speciesConfig = {
     smallInvert: {
         drawWidth: 10,
         drawHeight: 8,
+        clickWidth: 8,
+        clickHeight: 5,
         baseSpeed: 0.08,
         schooling: {
             enabled: false,
@@ -91,13 +101,19 @@ export const coralConfig = {
     branching: {
         width: 60,
         height: 42,
+        clickWidth: 50,
+        clickHeight: 35,
     },
     massive: {
         width: 50,
         height: 38,
+        clickWidth: 42,
+        clickHeight: 30,
     },
     plate: {
         width: 50,
         height: 38,
+        clickWidth: 42,
+        clickHeight: 30,
     }
 };
