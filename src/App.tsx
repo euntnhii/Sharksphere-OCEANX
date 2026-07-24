@@ -34,12 +34,13 @@ export function App() {
   const [entities, setEntities] = useState(createEntityArray(initialEcosystemState));
   const [selectedSpecies, setSelectedSpecies] = useState<string | null>(null); //state to track which species is selected for the modal
   const [blinkingSpecies, setBlinkingSpecies] = useState<string[]>([]); //state to track blinking
+  const [blinkEnabled, setBlinkEnabled] = useState(false); //state to track if blinking is enabled
   const allSpecies = ["Blacktip Reef Shark", "Striated Surgeonfish", "Bullethead Parrotfish", "Manybar Goatfish", "Cleaner Shrimp", "Reef Builder"];
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   //update states
-  function handleSimulationUpdate(newSharkPopulation: number) {
+  async function handleSimulationUpdate(newSharkPopulation: number) {
 
     //update shark population
     setSharkPopulation(newSharkPopulation);
@@ -57,17 +58,22 @@ export function App() {
     setEntities(newEntities);
 
     //create new anomaly result
-    const newAnomalyResult = getAnomalyResult(newEcosystemState);
+    const newAnomalyResult = await getAnomalyResult(newEcosystemState);
 
     //update anomaly result
     setAnomalyResult(newAnomalyResult);
 
+    // Stop all blinking
     setBlinkingSpecies([]);
+    setBlinkEnabled(false);
 
-    setTimeout(() => {
+    // Wait one frame, then start everyone together
+    requestAnimationFrame(() => {
       setBlinkingSpecies(allSpecies);
-    }, 0);
+      setBlinkEnabled(true);
+    });
   };
+
 
   //UI to return
   return (
@@ -95,6 +101,7 @@ export function App() {
             onSpeciesClick={setSelectedSpecies}
             blinkingSpecies={blinkingSpecies}
             setBlinkingSpecies={setBlinkingSpecies}
+            blinkEnabled={blinkEnabled}
           />
         </div>
       </div>
@@ -115,3 +122,4 @@ export function App() {
     </div>
   );
 };
+

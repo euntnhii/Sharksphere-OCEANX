@@ -9,8 +9,9 @@ type DisplayPanelProps = {
     anomalyResult: AnomalyResult;
     onSpeciesClick: (species: string) => void;
 
-    blinkingSpecies: string[]; //state to track species that are blinking
-    setBlinkingSpecies: React.Dispatch<React.SetStateAction<string[]>>; //function to update blinking species
+    blinkingSpecies: string[];
+    setBlinkingSpecies: React.Dispatch<React.SetStateAction<string[]>>;
+    blinkEnabled: boolean;
 };
 
 export function DisplayPanel({
@@ -18,7 +19,8 @@ export function DisplayPanel({
     anomalyResult,
     onSpeciesClick,
     blinkingSpecies,
-    setBlinkingSpecies
+    setBlinkingSpecies,
+    blinkEnabled
 }: DisplayPanelProps) {
 
     function getSpeciesColor(species: string) {
@@ -30,7 +32,8 @@ export function DisplayPanel({
     function getSpeciesClasses(species: string) {
         const colorClass = getSpeciesColor(species);
         const blinkingClass = colorClass.replace("status", "blinking");
-        return `${colorClass} ${blinkingClass}`;
+        return `${colorClass} ${blinkingClass} ${blinkEnabled ? "blinking-active" : ""
+            }`;
     }
 
 
@@ -55,7 +58,7 @@ export function DisplayPanel({
 
                 <div className="population-row">
                     <span>🦈 </span>
-                    <span className={`species-name ${blinkingSpecies.includes("Blacktip Reef Shark")
+                    <span className={`species-name ${blinkEnabled && blinkingSpecies.includes("Blacktip Reef Shark")
                         ? getSpeciesClasses("Blacktip Reef Shark")
                         : ""
                         }`}
@@ -66,7 +69,7 @@ export function DisplayPanel({
 
                 <div className="population-row">
                     <span>🐟 </span>
-                    <span className={`species-name ${blinkingSpecies.includes("Striated Surgeonfish")
+                    <span className={`species-name ${blinkEnabled && blinkingSpecies.includes("Striated Surgeonfish")
                         ? getSpeciesClasses("Striated Surgeonfish")
                         : ""
                         }`}
@@ -77,7 +80,7 @@ export function DisplayPanel({
 
                 <div className="population-row">
                     <span>🐟 </span>
-                    <span className={`species-name ${blinkingSpecies.includes("Bullethead Parrotfish")
+                    <span className={`species-name ${blinkEnabled && blinkingSpecies.includes("Bullethead Parrotfish")
                         ? getSpeciesClasses("Bullethead Parrotfish")
                         : ""
                         }`}
@@ -88,7 +91,7 @@ export function DisplayPanel({
 
                 <div className="population-row">
                     <span>🐟 </span>
-                    <span className={`species-name ${blinkingSpecies.includes("Manybar Goatfish")
+                    <span className={`species-name ${blinkEnabled && blinkingSpecies.includes("Manybar Goatfish")
                         ? getSpeciesClasses("Manybar Goatfish")
                         : ""
                         }`}
@@ -99,7 +102,7 @@ export function DisplayPanel({
 
                 <div className="population-row">
                     <span>🦐 </span>
-                    <span className={`species-name ${blinkingSpecies.includes("Cleaner Shrimp")
+                    <span className={`species-name ${blinkEnabled && blinkingSpecies.includes("Cleaner Shrimp")
                         ? getSpeciesClasses("Cleaner Shrimp")
                         : ""
                         }`}
@@ -110,7 +113,7 @@ export function DisplayPanel({
 
                 <div className="population-row">
                     <span>🪸 </span>
-                    <span className={`species-name ${blinkingSpecies.includes("Reef Builder")
+                    <span className={`species-name ${blinkEnabled && blinkingSpecies.includes("Reef Builder")
                         ? getSpeciesClasses("Reef Builder")
                         : ""
                         }`}

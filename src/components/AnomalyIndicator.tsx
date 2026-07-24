@@ -12,7 +12,7 @@ export function AnomalyIndicator(props: AnomalyIndicatorProps) {
         <>
             {/* display anomaly percentage */}
             <h3>Anomaly Percentage </h3>
-            <p>{props.anomalyResult.anomalyPercentage.toFixed(2)}%</p>
+            <p>{props.anomalyResult.anomaly_percentage.toFixed(2)}%</p>
         </>
     );
 

@@ -10,5 +10,8 @@ export type EcosystemState = {
 };
 
 export type AnomalyResult = {
-    anomalyPercentage: number;
+    prediction: number;
+    anomaly_score: number;
+    anomaly_percentage: number;
+    diffi_scores: Record<string, number>;
 };

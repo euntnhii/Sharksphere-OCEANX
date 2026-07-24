@@ -64,12 +64,19 @@
 
 .blinking-green {
     animation: greenBlink 1s infinite;
+    animation-play-state: paused;
 }
 
 .blinking-yellow {
     animation: yellowBlink 1s infinite;
+    animation-play-state: paused;
 }
 
 .blinking-red {
     animation: redBlink 1s infinite;
+    animation-play-state: paused;
+}
+
+.blinking-active {
+    animation-play-state: running;
 }
