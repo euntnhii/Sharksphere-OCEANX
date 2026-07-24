@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
+import "./App.css";
 import underwater_ambience from "./assets/audio/underwater_ambience.mp3";
 import type { EcosystemState, AnomalyResult } from "./types/ecosystemState";
 import { initialEcosystemState, initialAnomalyResult } from "./simulation/initialEcosystemPopulation";
 import { updateSimulation } from "./simulation/ecosystemSimulation";
 import { getAnomalyResult } from "./api/anomalyService";
-import { ControlPanel } from "./components/ControlPanel";
+import { DisplayPanel } from "./components/DisplayPanel";
 import { EcosystemCanvas } from "./components/EcosystemCanvas";
 import { createEntityArray } from "./simulation/entityFactory";
 import { SpeciesInfoModal } from "./components/SpeciesInfoModal";
+import { Slider } from "./components/Slider";
 
 export function App() {
 
@@ -31,6 +33,8 @@ export function App() {
   const [anomalyResult, setAnomalyResult] = useState<AnomalyResult>(initialAnomalyResult);
   const [entities, setEntities] = useState(createEntityArray(initialEcosystemState));
   const [selectedSpecies, setSelectedSpecies] = useState<string | null>(null); //state to track which species is selected for the modal
+  const [blinkingSpecies, setBlinkingSpecies] = useState<string[]>([]); //state to track blinking
+  const allSpecies = ["Blacktip Reef Shark", "Striated Surgeonfish", "Bullethead Parrotfish", "Manybar Goatfish", "Cleaner Shrimp", "Reef Builder"];
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -57,25 +61,50 @@ export function App() {
 
     //update anomaly result
     setAnomalyResult(newAnomalyResult);
+
+    setBlinkingSpecies([]);
+
+    setTimeout(() => {
+      setBlinkingSpecies(allSpecies);
+    }, 0);
   };
 
   //UI to return
   return (
 
-    <>
+    <div className="app-layout">
 
-      <EcosystemCanvas
-        ecosystemState={ecosystemState}
-        entities={entities}
-        onSpeciesClick={setSelectedSpecies}
-      />
+      <div className="top-section">
+        <div className="left-panel">
 
-      <ControlPanel
-        ecosystemState={ecosystemState}
-        anomalyResult={anomalyResult}
-        onSliderChange={handleSimulationUpdate}
-        onSpeciesClick={setSelectedSpecies}
-      />
+          <div className="canvas-container">
+            <EcosystemCanvas
+              ecosystemState={ecosystemState}
+              entities={entities}
+              onSpeciesClick={setSelectedSpecies}
+            />
+          </div>
+
+        </div>
+
+        <div className="right-panel">
+
+          <DisplayPanel
+            ecosystemState={ecosystemState}
+            anomalyResult={anomalyResult}
+            onSpeciesClick={setSelectedSpecies}
+            blinkingSpecies={blinkingSpecies}
+            setBlinkingSpecies={setBlinkingSpecies}
+          />
+        </div>
+      </div>
+
+      <div className="bottom-section">
+        <Slider
+          sharkPopulation={ecosystemState.populations.apexPredator}
+          onSliderChange={handleSimulationUpdate}
+        />
+      </div>
 
       <SpeciesInfoModal
         species={selectedSpecies}
@@ -83,6 +112,6 @@ export function App() {
         onClose={() => setSelectedSpecies(null)}
       />
 
-    </>
+    </div>
   );
 };

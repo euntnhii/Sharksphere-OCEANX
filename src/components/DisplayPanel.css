@@ -1,0 +1,75 @@
+.display-panel {
+    box-sizing: border-box;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 6px 6px rgba(0, 0, 0, 0.05);
+    padding-bottom: 30px;
+    padding-top: 20px;
+}
+
+.anomaly-section {
+    margin-bottom: 80px;
+    margin-left: 20px;
+    text-align: left;
+}
+
+.population-section {
+    margin-left: 20px;
+    text-align: left;
+}
+
+.population-row {
+    padding-bottom: 20px;
+}
+
+.species-name {
+    cursor: pointer;
+}
+
+@keyframes greenBlink {
+
+    0%,
+    100% {
+        text-shadow: none;
+    }
+
+    50% {
+        text-shadow: 0 0 10px rgb(62, 224, 148);
+    }
+}
+
+@keyframes yellowBlink {
+
+    0%,
+    100% {
+        text-shadow: none;
+    }
+
+    50% {
+        text-shadow: 0 0 10px rgb(250, 211, 16);
+    }
+}
+
+@keyframes redBlink {
+
+    0%,
+    100% {
+        text-shadow: none;
+    }
+
+    50% {
+        text-shadow: 0 0 10px rgb(232, 75, 94);
+    }
+}
+
+.blinking-green {
+    animation: greenBlink 1s infinite;
+}
+
+.blinking-yellow {
+    animation: yellowBlink 1s infinite;
+}
+
+.blinking-red {
+    animation: redBlink 1s infinite;
+}

@@ -153,14 +153,15 @@
 }
 
 .close-modal {
-    margin-top: 140px;
-    margin-bottom: 10px;
+    display: block;
+    margin: 140px auto 10px auto;
     padding: 12px 100px;
+
     background-color: rgb(90, 170, 255);
     border: 2px solid rgb(165, 204, 255);
     border-radius: 10px;
     font-size: 16px;
-    color: rgb(255, 255, 255);
+    color: white;
 }
 
 .close-modal:hover {
