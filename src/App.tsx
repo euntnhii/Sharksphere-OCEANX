@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import underwater_ambience from "./assets/audio/underwater_ambience.mp3";
 import type { EcosystemState, AnomalyResult } from "./types/ecosystemState";
@@ -13,19 +13,8 @@ import { Slider } from "./components/Slider";
 
 export function App() {
 
-  useEffect(() => {
-    const audio = new Audio(underwater_ambience);
-    audio.loop = true;
-    audio.volume = 0.7;
-
-    audio.play().catch((error) => {
-      console.error("Error playing audio:", error);
-    });
-
-    return () => {
-      audio.pause();
-    };
-  }, []);
+  //audio ref
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   //create states
   const [sharkPopulation, setSharkPopulation] = useState(initialEcosystemState.populations.apexPredator);
@@ -36,8 +25,29 @@ export function App() {
   const [blinkingSpecies, setBlinkingSpecies] = useState<string[]>([]); //state to track blinking
   const [blinkEnabled, setBlinkEnabled] = useState(false); //state to track if blinking is enabled
   const allSpecies = ["Blacktip Reef Shark", "Striated Surgeonfish", "Bullethead Parrotfish", "Manybar Goatfish", "Cleaner Shrimp", "Reef Builder"];
+  const [hasStarted, setHasStarted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  //load audio
+  useEffect(() => {
+    const audio = new Audio(underwater_ambience);
+    audio.loop = true;
+    audio.volume = 0.7;
+
+    audioRef.current = audio;
+
+    return () => {
+      audio.pause();
+    };
+  }, []);
+
+  //handle start simulation
+  function handleStart() {
+    setHasStarted(true);
+
+    audioRef.current?.play().catch(console.error);
+  }
 
   //update states
   async function handleSimulationUpdate(newSharkPopulation: number) {
@@ -119,6 +129,13 @@ export function App() {
         onClose={() => setSelectedSpecies(null)}
       />
 
+      {!hasStarted && (
+        <div className="start-overlay" onClick={handleStart}>
+          <div className="start-message">
+            <h3>Click anywhere to begin</h3>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
