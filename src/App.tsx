@@ -17,7 +17,6 @@ export function App() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   //create states
-  const [sharkPopulation, setSharkPopulation] = useState(initialEcosystemState.populations.apexPredator);
   const [ecosystemState, setEcosystemState] = useState<EcosystemState>(initialEcosystemState);
   const [anomalyResult, setAnomalyResult] = useState<AnomalyResult>(initialAnomalyResult);
   const [entities, setEntities] = useState(createEntityArray(initialEcosystemState));
@@ -26,8 +25,8 @@ export function App() {
   const [blinkEnabled, setBlinkEnabled] = useState(false); //state to track if blinking is enabled
   const allSpecies = ["Blacktip Reef Shark", "Striated Surgeonfish", "Bullethead Parrotfish", "Manybar Goatfish", "Cleaner Shrimp", "Reef Builder"];
   const [hasStarted, setHasStarted] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  //const [loading, setLoading] = useState(false);
+  //const [error, setError] = useState<string | null>(null);
 
   //load audio
   useEffect(() => {
@@ -51,9 +50,6 @@ export function App() {
 
   //update states
   async function handleSimulationUpdate(newSharkPopulation: number) {
-
-    //update shark population
-    setSharkPopulation(newSharkPopulation);
 
     //create new ecosystem state
     const newEcosystemState = updateSimulation(newSharkPopulation);
