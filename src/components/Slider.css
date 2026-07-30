@@ -1,6 +1,5 @@
 .slider-panel {
-    padding-top: 1px;
-    padding-bottom: 18px;
+    padding-bottom: 16px;
     padding-left: 20px;
     padding-right: 20px;
 
@@ -26,7 +25,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    padding-top: 8px;
+    padding-top: 4px;
 }
 
 .population-slider {
@@ -50,7 +49,7 @@
 .slider-labels {
     display: flex;
     justify-content: space-between;
-    font-size: 18px;
+    font-size: 17px;
     color: white;
     padding-top: 8px;
 }
