@@ -41,6 +41,22 @@
   }
 }
 
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(120% 90% at 50% -10%,
+      rgba(120, 225, 255, 0.30) 0%, rgba(120, 225, 255, 0) 45%),
+    linear-gradient(to bottom,
+      #2f8ca0 0%,
+      /* surface teal */
+      #12506b 34%,
+      /* mid blue */
+      #06213c 72%,
+      /* deep blue */
+      #030d1c 100%);
+  /* abyss */
+}
+
 .top-section {
   display: flex;
   gap: 10px;
