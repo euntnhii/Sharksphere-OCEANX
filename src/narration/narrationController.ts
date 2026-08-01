@@ -1,0 +1,1 @@
+//diff functions (startIntro, startMission etc)

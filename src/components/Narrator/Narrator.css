@@ -1,0 +1,10 @@
+.narrator {
+    display: flex;
+    align-items: flex-end;
+}
+
+.narrator-image {
+    height: 240px;
+    user-select: none;
+    pointer-events: none;
+}

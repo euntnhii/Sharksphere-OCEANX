@@ -45,83 +45,83 @@ export function DisplayPanel({
     return (
         <div className="display-panel">
 
-
-            <div className="anomaly-section">
-                <AnomalyIndicator anomalyResult={anomalyResult} />
+            <div className="display-card">
+                <div className="anomaly-section">
+                    <AnomalyIndicator anomalyResult={anomalyResult} />
+                </div>
             </div>
 
+            <div className="display-card">
+                {/* Left Section (Population counts) */}
+                <div className="population-section">
 
-            {/* Left Section (Population counts) */}
-            <div className="population-section">
+                    <div className="population-row">
 
-                <h3>Ecosystem Populations</h3>
+                        <h3 className={`species-name ${blinkEnabled && blinkingSpecies.includes("Blacktip Reef Shark")
+                            ? getSpeciesClasses("Blacktip Reef Shark")
+                            : ""
+                            }`}
 
-                <div className="population-row">
-                    <span>🦈 </span>
-                    <span className={`species-name ${blinkEnabled && blinkingSpecies.includes("Blacktip Reef Shark")
-                        ? getSpeciesClasses("Blacktip Reef Shark")
-                        : ""
-                        }`}
+                            onClick={() => handleSpeciesClick("Blacktip Reef Shark")}>🦈 Blacktip Reef Shark</h3>
+                        <strong>{Math.ceil(ecosystemState.populations["apexPredator"])}</strong>
+                    </div>
 
-                        onClick={() => handleSpeciesClick("Blacktip Reef Shark")}>Blacktip Reef Shark: </span>
-                    <strong>{Math.ceil(ecosystemState.populations["apexPredator"])}</strong>
+                    <div className="population-row">
+
+                        <h3 className={`species-name ${blinkEnabled && blinkingSpecies.includes("Striated Surgeonfish")
+                            ? getSpeciesClasses("Striated Surgeonfish")
+                            : ""
+                            }`}
+
+                            onClick={() => handleSpeciesClick("Striated Surgeonfish")}>🐟 Striated Surgeonfish</h3>
+                        <strong>{Math.ceil(ecosystemState.populations["turfBrusher"])}</strong>
+                    </div>
+
+                    <div className="population-row">
+
+                        <h3 className={`species-name ${blinkEnabled && blinkingSpecies.includes("Bullethead Parrotfish")
+                            ? getSpeciesClasses("Bullethead Parrotfish")
+                            : ""
+                            }`}
+
+                            onClick={() => handleSpeciesClick("Bullethead Parrotfish")}>🐟 Bullethead Parrotfish</h3>
+                        <strong>{Math.ceil(ecosystemState.populations["herbivoreScraper"])}</strong>
+                    </div>
+
+                    <div className="population-row">
+
+                        <h3 className={`species-name ${blinkEnabled && blinkingSpecies.includes("Manybar Goatfish")
+                            ? getSpeciesClasses("Manybar Goatfish")
+                            : ""
+                            }`}
+
+                            onClick={() => handleSpeciesClick("Manybar Goatfish")}>🐟 Manybar Goatfish</h3>
+                        <strong>{Math.ceil(ecosystemState.populations["invertebrateHunter"])}</strong>
+                    </div>
+
+                    <div className="population-row">
+
+                        <h3 className={`species-name ${blinkEnabled && blinkingSpecies.includes("Cleaner Shrimp")
+                            ? getSpeciesClasses("Cleaner Shrimp")
+                            : ""
+                            }`}
+
+                            onClick={() => handleSpeciesClick("Cleaner Shrimp")}>🦐 Cleaner Shrimp</h3>
+                        <strong>{Math.ceil(ecosystemState.populations["smallInvertebrate"])}</strong>
+                    </div>
+
+                    <div className="population-row">
+
+                        <h3 className={`species-name ${blinkEnabled && blinkingSpecies.includes("Reef Builder")
+                            ? getSpeciesClasses("Reef Builder")
+                            : ""
+                            }`}
+
+                            onClick={() => handleSpeciesClick("Reef Builder")}>🪸 Reef Builder Health</h3>
+                        <strong>{ecosystemState.coralHealth.toFixed(2)}%</strong>
+                    </div>
+
                 </div>
-
-                <div className="population-row">
-                    <span>🐟 </span>
-                    <span className={`species-name ${blinkEnabled && blinkingSpecies.includes("Striated Surgeonfish")
-                        ? getSpeciesClasses("Striated Surgeonfish")
-                        : ""
-                        }`}
-
-                        onClick={() => handleSpeciesClick("Striated Surgeonfish")}>Striated Surgeonfish: </span>
-                    <strong>{Math.ceil(ecosystemState.populations["turfBrusher"])}</strong>
-                </div>
-
-                <div className="population-row">
-                    <span>🐟 </span>
-                    <span className={`species-name ${blinkEnabled && blinkingSpecies.includes("Bullethead Parrotfish")
-                        ? getSpeciesClasses("Bullethead Parrotfish")
-                        : ""
-                        }`}
-
-                        onClick={() => handleSpeciesClick("Bullethead Parrotfish")}>Bullethead Parrotfish: </span>
-                    <strong>{Math.ceil(ecosystemState.populations["herbivoreScraper"])}</strong>
-                </div>
-
-                <div className="population-row">
-                    <span>🐟 </span>
-                    <span className={`species-name ${blinkEnabled && blinkingSpecies.includes("Manybar Goatfish")
-                        ? getSpeciesClasses("Manybar Goatfish")
-                        : ""
-                        }`}
-
-                        onClick={() => handleSpeciesClick("Manybar Goatfish")}>Manybar Goatfish: </span>
-                    <strong>{Math.ceil(ecosystemState.populations["invertebrateHunter"])}</strong>
-                </div>
-
-                <div className="population-row">
-                    <span>🦐 </span>
-                    <span className={`species-name ${blinkEnabled && blinkingSpecies.includes("Cleaner Shrimp")
-                        ? getSpeciesClasses("Cleaner Shrimp")
-                        : ""
-                        }`}
-
-                        onClick={() => handleSpeciesClick("Cleaner Shrimp")}>Cleaner Shrimp: </span>
-                    <strong>{Math.ceil(ecosystemState.populations["smallInvertebrate"])}</strong>
-                </div>
-
-                <div className="population-row">
-                    <span>🪸 </span>
-                    <span className={`species-name ${blinkEnabled && blinkingSpecies.includes("Reef Builder")
-                        ? getSpeciesClasses("Reef Builder")
-                        : ""
-                        }`}
-
-                        onClick={() => handleSpeciesClick("Reef Builder")}>Reef Builder Health: </span>
-                    <strong>{ecosystemState.coralHealth.toFixed(2)}%</strong>
-                </div>
-
             </div>
         </div>
 

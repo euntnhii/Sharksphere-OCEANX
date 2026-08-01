@@ -1,8 +1,11 @@
 .display-panel {
-    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
 
-    padding-bottom: 20px;
-    padding-top: 20px;
+.display-card {
+    box-sizing: border-box;
 
     background: rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(16px);
@@ -19,23 +22,50 @@
 }
 
 .anomaly-section {
-    margin-bottom: 40px;
-    margin-left: 20px;
+    padding: 0 20px;
     text-align: left;
+}
+
+.anomaly-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.anomaly-row p {
+    font-size: 22px;
+    font-weight: bold;
 }
 
 .population-section {
-    margin-left: 20px;
+    padding-right: 18px;
+    margin-left: 12px;
     text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    padding-bottom: 22px;
+    padding-top: 22px;
 }
 
 .population-row {
-    padding-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.population-row h3 {
+    margin: 0;
+}
+
+.population-row strong {
+    font-size: 22px;
+    font-weight: bold;
 }
 
 .species-name {
     cursor: pointer;
-
     transition: all 0.25s ease;
 }
 

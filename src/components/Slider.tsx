@@ -18,11 +18,9 @@ export function Slider({
     return (
         <div className="slider-panel">
 
-            <h3>
-                Shark Population: {Math.ceil(sharkPopulation)}
-            </h3>
+            <div className="slider-row">
 
-            <div className="slider-container">
+                <span className="slider-min">0 Sharks</span>
 
                 <input
                     className="population-slider"
@@ -33,11 +31,8 @@ export function Slider({
                     onChange={handleChange}
                 />
 
-            </div>
+                <span className="slider-max">14 Sharks</span>
 
-            <div className="slider-labels">
-                <span>0 Sharks</span>
-                <span>14 Sharks</span>
             </div>
 
         </div>

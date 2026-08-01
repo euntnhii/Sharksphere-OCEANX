@@ -10,6 +10,9 @@ import { EcosystemCanvas } from "./components/EcosystemCanvas";
 import { createEntityArray } from "./simulation/entityFactory";
 import { SpeciesInfoModal } from "./components/SpeciesInfoModal";
 import { Slider } from "./components/Slider";
+import { Narrator } from "./components/Narrator/Narrator";
+import { NarratorBubble } from "./components/Narrator/NarratorBubble";
+import { narrationScripts } from "./narration/narrationScript";
 
 export function App() {
 
@@ -25,6 +28,9 @@ export function App() {
   const [blinkEnabled, setBlinkEnabled] = useState(false); //state to track if blinking is enabled
   const allSpecies = ["Blacktip Reef Shark", "Striated Surgeonfish", "Bullethead Parrotfish", "Manybar Goatfish", "Cleaner Shrimp", "Reef Builder"];
   const [hasStarted, setHasStarted] = useState(false);
+  const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
+  const currentDialogue = narrationScripts[currentDialogueIndex];
+
   //const [loading, setLoading] = useState(false);
   //const [error, setError] = useState<string | null>(null);
 
@@ -86,21 +92,11 @@ export function App() {
 
     <div className="app-layout">
 
-      <div className="top-section">
-        <div className="left-panel">
+      <div className="mission-header">Mission 2</div>
 
-          <div className="canvas-container">
-            <EcosystemCanvas
-              ecosystemState={ecosystemState}
-              entities={entities}
-              onSpeciesClick={setSelectedSpecies}
-            />
-          </div>
+      <div className="screen-display">
 
-        </div>
-
-        <div className="right-panel">
-
+        <div className="display-column">
           <DisplayPanel
             ecosystemState={ecosystemState}
             anomalyResult={anomalyResult}
@@ -110,14 +106,43 @@ export function App() {
             blinkEnabled={blinkEnabled}
           />
         </div>
+
+        <div className="right-column">
+
+          <div className="simulation-frame">
+            <div className="simulation-viewport">
+              <EcosystemCanvas
+                ecosystemState={ecosystemState}
+                entities={entities}
+                onSpeciesClick={setSelectedSpecies}
+              />
+            </div>
+          </div>
+
+          <div className="slider-section">
+            <Slider
+              sharkPopulation={ecosystemState.populations.apexPredator}
+              onSliderChange={handleSimulationUpdate}
+            />
+          </div>
+
+        </div>
+
       </div>
 
-      <div className="bottom-section">
-        <Slider
-          sharkPopulation={ecosystemState.populations.apexPredator}
-          onSliderChange={handleSimulationUpdate}
-        />
+      <div className="narrator-section">
+        <Narrator />
+
+        <div className="narrator-bubble">
+          <NarratorBubble text={currentDialogue.text}
+            onClick={() =>
+              setCurrentDialogueIndex(index =>
+                Math.min(index + 1, narrationScripts.length - 1))
+            }
+          />
+        </div>
       </div>
+
 
       <SpeciesInfoModal
         species={selectedSpecies}

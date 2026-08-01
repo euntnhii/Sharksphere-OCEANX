@@ -1,5 +1,5 @@
 .slider-panel {
-    padding-bottom: 16px;
+    padding-bottom: 14px;
     padding-left: 20px;
     padding-right: 20px;
 
@@ -17,19 +17,23 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
-.slider-panel h3 {
-    color: white;
+.slider-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-top: 14px;
 }
 
-.slider-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding-top: 4px;
+.slider-min,
+.slider-max {
+    color: white;
+    font-weight: bold;
+    font-size: 19px;
+    white-space: nowrap;
 }
 
 .population-slider {
-    width: 96%;
+    flex: 1;
     appearance: none;
     height: 8px;
     border-radius: 99px;
@@ -44,12 +48,4 @@
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.799);
     cursor: pointer;
-}
-
-.slider-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 17px;
-    color: white;
-    padding-top: 8px;
 }
