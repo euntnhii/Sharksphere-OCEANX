@@ -49,25 +49,28 @@ export const narrationScripts: NarrationScript[] = [
         id: "intro-7",
         text: "Now, let's explore how shark population changes can affect the rest of the ocean ecosystem!",
         overlay: "full",
-        advance: "auto"
+        advance: "auto",
+        pauseAfter: 300
     },
     {
         id: "tutorial-0",
         text: "This is our ecosystem model, which will reflect changes in any fish populations or coral reef builder states.", //remove overlay for simulation part of the screen
         overlay: "simulation",
-        advance: "auto"
+        advance: "auto",
     },
     {
         id: "tutorial-1",
         text: "Click on any of the fishes or coral reefs to find out more about them!",
         overlay: "simulation",
-        advance: "modal-close"
+        advance: "modal-close",
+        pauseAfter: 600
     },
     {
         id: "tutorial-2",
         text: "This slider changes the shark population in the ecosystem model. Try moving it, and see how the ecosystem model changes!", //remove overlay for slider part of the screen
         overlay: "slider",
-        advance: "slider"
+        advance: "slider",
+        pauseAfter: 2000
     },
     {
         id: "tutorial-3",
@@ -76,16 +79,24 @@ export const narrationScripts: NarrationScript[] = [
         advance: "auto"
     },
     {
+        id: "tutorial-3.5",
+        text: "The different blinking colours represent the different population health levels of each species. Red represents an unhealthy level, while yellow represents a warning, and green represents a healthy level.",
+        overlay: "display",
+        advance: "auto"
+    },
+    {
         id: "tutorial-4",
         text: "Click on any of the species' names to find out more!",
         overlay: "display",
-        advance: "modal-close"
+        advance: "modal-close",
+        pauseAfter: 600
     },
     {
         id: "tutorial-5",
         text: "This panel displays the anomaly score of the ecosystem. A higher anomaly score means that the ecosystem is more imbalanced.", //remove overlay for anomaly score part (put back overlay for display panel)
         overlay: "anomaly",
-        advance: "auto"
+        advance: "auto",
+        pauseAfter: 800
     },
     {
         id: "tutorial-6",

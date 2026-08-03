@@ -12,6 +12,67 @@
     font-family: "Fredoka", sans-serif;
 }
 
+.done-button {
+    /* Text */
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 0 2px 3px rgba(0, 41, 90, 0.122);
+    letter-spacing: 0.5px;
+
+    /* Shape */
+    padding: 16px 48px;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+
+    /* Glossy blue gradient */
+    background: linear-gradient(180deg,
+            #5cc0ff 0%,
+            #2f95f0 45%,
+            #1f7fe0 100%);
+
+    /* Depth */
+    box-shadow:
+        0 6px 0 #1668c0,
+        0 10px 18px rgba(0, 60, 120, 0.45),
+        inset 0 2px 4px rgba(255, 255, 255, 0.6);
+
+    transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease,
+        background 0.2s ease;
+}
+
+.done-button:hover {
+    background: linear-gradient(180deg,
+            #6fc9ff 0%,
+            #3aa0f5 45%,
+            #268ae8 100%);
+}
+
+.done-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+
+    background: linear-gradient(180deg,
+            #9eb7c8 0%,
+            #7e97a8 100%);
+
+    box-shadow:
+        0 4px 0 #6b8292,
+        0 6px 12px rgba(0, 0, 0, 0.2);
+
+    transform: none;
+}
+
+.done-button:disabled:hover {
+    background: linear-gradient(180deg,
+            #9eb7c8 0%,
+            #7e97a8 100%);
+}
+
 .exploration-timer button {
 
     padding: 12px 26px;
@@ -23,4 +84,44 @@
     font-family: "Fredoka", sans-serif;
 
     cursor: pointer;
+}
+
+.confirmation-overlay {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(0, 0, 0, 0.519);
+    z-index: 2000;
+}
+
+.confirmation-box {
+    width: 440px;
+    max-width: 90%;
+
+    padding: 28px;
+
+    border-radius: 18px;
+
+    background: white;
+    color: #1d3557;
+
+    text-align: center;
+
+    box-shadow: 0 20px 40px rgba(0, 0, 0, .35);
+}
+
+.confirmation-box p {
+    padding-bottom: 10px;
+}
+
+.confirmation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+
+    margin-top: 26px;
 }

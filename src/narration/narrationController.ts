@@ -27,7 +27,7 @@ export function playDialogue(
     currentAudio.onended = () => {
         setTimeout(() => {
             onFinished();
-        }, 400);
+        }, 200);
     };
 
     currentAudio.play().catch(error => {

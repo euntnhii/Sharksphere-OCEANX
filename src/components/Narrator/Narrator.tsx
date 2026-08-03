@@ -1,7 +1,7 @@
-//render ocean protector
+//render ocean protector and speech bubble
 
 import "./Narrator.css";
-import narratorImage from "../../assets/oceanProtector/fin-pose-5.png";
+import narratorImage from "../../assets/oceanProtector/finPose5.png";
 
 export function Narrator() {
     return (

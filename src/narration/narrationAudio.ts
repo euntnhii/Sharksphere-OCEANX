@@ -12,6 +12,7 @@ import tutorial0 from "../assets/audio/narration/tutorial0-audio.mp3";
 import tutorial1 from "../assets/audio/narration/tutorial1-audio.mp3";
 import tutorial2 from "../assets/audio/narration/tutorial2-audio.mp3";
 import tutorial3 from "../assets/audio/narration/tutorial3-audio.mp3";
+import tutorial3_5 from "../assets/audio/narration/tutorial3.5-audio.mp3";
 import tutorial4 from "../assets/audio/narration/tutorial4-audio.mp3";
 import tutorial5 from "../assets/audio/narration/tutorial5-audio.mp3";
 import tutorial6 from "../assets/audio/narration/tutorial6-audio.mp3";
@@ -35,6 +36,7 @@ export const narrationAudio = {
     "tutorial-1": tutorial1,
     "tutorial-2": tutorial2,
     "tutorial-3": tutorial3,
+    "tutorial-3.5": tutorial3_5,
     "tutorial-4": tutorial4,
     "tutorial-5": tutorial5,
     "tutorial-6": tutorial6,

@@ -13,6 +13,7 @@ export function ExplorationTimer({ duration, unlockAfter, onFinished }: Explorat
 
     const [remainingTime, setRemainingTime] = useState(duration);
     const [isUnlocked, setIsUnlocked] = useState(false);
+    const [showConfirmation, setShowConfirmation] = useState(false);
 
     useEffect(() => {
         const unlockTimeout = setTimeout(() => {
@@ -51,9 +52,32 @@ export function ExplorationTimer({ duration, unlockAfter, onFinished }: Explorat
                 {formattedTime}
             </div>
 
-            <button disabled={!isUnlocked}>
+            <button className="done-button" disabled={!isUnlocked} onClick={() => setShowConfirmation(true)}>
                 I'm done exploring →
             </button>
+
+            {showConfirmation && (
+                <div className="confirmation-overlay">
+                    <div className="confirmation-box">
+
+                        <p>
+                            Are you sure you want to leave the simulation page?
+                        </p>
+
+                        <div className="confirmation-buttons">
+
+                            <button onClick={onFinished}>
+                                Confirm
+                            </button>
+                            <button onClick={() => setShowConfirmation(false)}>
+                                Cancel
+                            </button>
+
+                        </div>
+                    </div>
+
+                </div>
+            )}
         </div>
     );
 }

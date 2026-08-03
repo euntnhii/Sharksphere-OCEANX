@@ -44,7 +44,7 @@ export function App() {
   useEffect(() => {
     const audio = new Audio(underwater_ambience);
     audio.loop = true;
-    audio.volume = 0.7;
+    audio.volume = 0.9;
 
     audioRef.current = audio;
 
@@ -68,7 +68,13 @@ export function App() {
     setSelectedSpecies(null);
 
     if (currentDialogue.advance === "modal-close") {
-      advanceDialogue();
+      setTimeout(
+        advanceDialogue, currentDialogue.pauseAfter ?? 0);
+    }
+
+    if (currentDialogue.advance === "slider" && !hasMovedSlider) {
+      setHasMovedSlider(true), setTimeout(
+        advanceDialogue, currentDialogue.pauseAfter ?? 0);
     }
   }
 
