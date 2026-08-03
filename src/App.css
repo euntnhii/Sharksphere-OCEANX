@@ -135,6 +135,7 @@ body {
 
 .narrator-section {
   width: 88%;
+  max-height: 280px;
   display: flex;
   align-items: flex-end;
   justify-content: flex-start;

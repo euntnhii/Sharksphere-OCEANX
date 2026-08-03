@@ -63,14 +63,14 @@ export const narrationScripts: NarrationScript[] = [
         text: "Click on any of the fishes or coral reefs to find out more about them!",
         overlay: "simulation",
         advance: "modal-close",
-        pauseAfter: 600
+        pauseAfter: 800
     },
     {
         id: "tutorial-2",
         text: "This slider changes the shark population in the ecosystem model. Try moving it, and see how the ecosystem model changes!", //remove overlay for slider part of the screen
         overlay: "slider",
         advance: "slider",
-        pauseAfter: 2000
+        pauseAfter: 2800
     },
     {
         id: "tutorial-3",
@@ -89,7 +89,7 @@ export const narrationScripts: NarrationScript[] = [
         text: "Click on any of the species' names to find out more!",
         overlay: "display",
         advance: "modal-close",
-        pauseAfter: 600
+        pauseAfter: 800
     },
     {
         id: "tutorial-5",
@@ -130,7 +130,7 @@ export const narrationScripts: NarrationScript[] = [
     },
     {
         id: "tutorial-11",
-        text: "Do also click on any of the fishes or coral reefs to learn more about the ecosystem in the simulation!",
+        text: "Do also click on any of the fishes or coral reefs to learn more about the marine life in the simulation!",
         overlay: "full",
         advance: "auto"
     },

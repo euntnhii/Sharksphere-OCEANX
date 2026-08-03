@@ -16,6 +16,9 @@ import { narrationScripts } from "./narration/narrationScript";
 import { playDialogue } from "./narration/narrationController";
 import { NarrationOverlay } from "./components/Narrator/NarrationOverlay";
 import { ExplorationTimer } from "./components/ExplorationTimer";
+import type { SharkZone } from "./narration/addNarration";
+import { addNarration, getExplorationZone } from "./narration/addNarration";
+import { playZoneNarration } from "./narration/addNarrationController";
 
 export function App() {
 
@@ -35,9 +38,11 @@ export function App() {
   const currentDialogue = narrationScripts[currentDialogueIndex];
   const [hasMovedSlider, setHasMovedSlider] = useState(false);
   const [isExplorationActive, setIsExplorationActive] = useState(false);
-
-  //const [loading, setLoading] = useState(false);
-  //const [error, setError] = useState<string | null>(null);
+  const [sliderLocked, setSliderLocked] = useState(false);
+  const [additionalNarration, setAdditionalNarration] = useState<string | null>(null);
+  const lastZoneRef = useRef<SharkZone | null>(null);
+  const narrationTimeoutRef = useRef<number | null>(null);
+  const [isZoneNarrating, setIsZoneNarrating] = useState(false);
 
 
   //load audio
@@ -69,11 +74,6 @@ export function App() {
 
     if (currentDialogue.advance === "modal-close") {
       setTimeout(
-        advanceDialogue, currentDialogue.pauseAfter ?? 0);
-    }
-
-    if (currentDialogue.advance === "slider" && !hasMovedSlider) {
-      setHasMovedSlider(true), setTimeout(
         advanceDialogue, currentDialogue.pauseAfter ?? 0);
     }
   }
@@ -151,7 +151,51 @@ export function App() {
       setBlinkingSpecies(allSpecies);
       setBlinkEnabled(true);
     });
+
+    // Additional narration
+    if (isExplorationActive) {
+
+      if (narrationTimeoutRef.current) {
+        clearTimeout(narrationTimeoutRef.current);
+      }
+
+      narrationTimeoutRef.current = window.setTimeout(async () => {
+        const zone = getExplorationZone(newSharkPopulation);
+
+        if (zone !== lastZoneRef.current && !isZoneNarrating) {
+          lastZoneRef.current = zone;
+
+          const narration = addNarration[zone];
+
+          await playZoneNarration(narration, {
+            onStart: () => {
+              setSliderLocked(true);
+              setIsZoneNarrating(true);
+            },
+
+            onText: (text) => {
+              setAdditionalNarration(text);
+            },
+
+            onFinish: () => {
+              setAdditionalNarration(null);
+              setSliderLocked(false);
+              setIsZoneNarrating(false);
+            }
+          });
+
+        }
+      }, 1000);
+    }
   };
+
+  useEffect(() => {
+    return () => {
+      if (narrationTimeoutRef.current) {
+        clearTimeout(narrationTimeoutRef.current);
+      }
+    };
+  }, []);
 
 
   //UI to return
@@ -193,6 +237,7 @@ export function App() {
             <Slider
               sharkPopulation={ecosystemState.populations.apexPredator}
               onSliderChange={handleSimulationUpdate}
+              disabled={sliderLocked}
             />
           </div>
 
@@ -206,7 +251,9 @@ export function App() {
         </div>
 
         <div className="narrator-bubble">
-          <NarratorBubble text={currentDialogue.text} />
+          <NarratorBubble
+            text={additionalNarration ?? currentDialogue.text}
+          />
         </div>
 
         <div className="exploration-timer">
