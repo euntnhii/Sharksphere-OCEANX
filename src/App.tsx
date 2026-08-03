@@ -13,6 +13,9 @@ import { Slider } from "./components/Slider";
 import { Narrator } from "./components/Narrator/Narrator";
 import { NarratorBubble } from "./components/Narrator/NarratorBubble";
 import { narrationScripts } from "./narration/narrationScript";
+import { playDialogue } from "./narration/narrationController";
+import { NarrationOverlay } from "./components/Narrator/NarrationOverlay";
+import { ExplorationTimer } from "./components/ExplorationTimer";
 
 export function App() {
 
@@ -30,9 +33,12 @@ export function App() {
   const [hasStarted, setHasStarted] = useState(false);
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
   const currentDialogue = narrationScripts[currentDialogueIndex];
+  const [hasMovedSlider, setHasMovedSlider] = useState(false);
+  const [isExplorationActive, setIsExplorationActive] = useState(false);
 
   //const [loading, setLoading] = useState(false);
   //const [error, setError] = useState<string | null>(null);
+
 
   //load audio
   useEffect(() => {
@@ -47,6 +53,50 @@ export function App() {
     };
   }, []);
 
+
+  function advanceDialogue() {
+    const nextIndex = currentDialogueIndex + 1;
+
+    if (nextIndex < narrationScripts.length) {
+      setCurrentDialogueIndex(nextIndex);
+    } else {
+      setIsExplorationActive(true);
+    }
+  }
+
+  function handleModalClose() {
+    setSelectedSpecies(null);
+
+    if (currentDialogue.advance === "modal-close") {
+      advanceDialogue();
+    }
+  }
+
+  //play dialogue when currentDialogueIndex changes
+  useEffect(() => {
+    if (!hasStarted) return;
+
+    const dialogue = narrationScripts[currentDialogueIndex];
+
+    const audio = playDialogue(dialogue.id, () => {
+
+      if (dialogue.advance !== "auto") {
+        return;
+      }
+
+      setTimeout(
+        advanceDialogue,
+        dialogue.pauseAfter ?? 0
+      );
+    });
+
+    return () => {
+      audio?.pause();
+      audio?.removeAttribute("src");
+      audio?.load();
+    };
+  }, [currentDialogueIndex, hasStarted]);
+
   //handle start simulation
   function handleStart() {
     setHasStarted(true);
@@ -56,6 +106,17 @@ export function App() {
 
   //update states
   async function handleSimulationUpdate(newSharkPopulation: number) {
+
+    //tutorial part (advance dialogue after user engages with slider)
+    if (
+      currentDialogue.advance === "slider" &&
+      !hasMovedSlider
+    ) {
+      setHasMovedSlider(true);
+      setTimeout(() => {
+        advanceDialogue();
+      }, 800);
+    }
 
     //create new ecosystem state
     const newEcosystemState = updateSimulation(newSharkPopulation);
@@ -92,11 +153,14 @@ export function App() {
 
     <div className="app-layout">
 
+      <NarrationOverlay mode={currentDialogue.overlay}
+      />
+
       <div className="mission-header">Mission 2</div>
 
       <div className="screen-display">
 
-        <div className="display-column">
+        <div className="display-column" id="display-panel">
           <DisplayPanel
             ecosystemState={ecosystemState}
             anomalyResult={anomalyResult}
@@ -107,9 +171,9 @@ export function App() {
           />
         </div>
 
-        <div className="right-column">
+        <div className="right-column" id="right-column">
 
-          <div className="simulation-frame">
+          <div className="simulation-frame" id="simulation-frame">
             <div className="simulation-viewport">
               <EcosystemCanvas
                 ecosystemState={ecosystemState}
@@ -119,7 +183,7 @@ export function App() {
             </div>
           </div>
 
-          <div className="slider-section">
+          <div className="slider-section" id="slider-section">
             <Slider
               sharkPopulation={ecosystemState.populations.apexPredator}
               onSliderChange={handleSimulationUpdate}
@@ -131,23 +195,31 @@ export function App() {
       </div>
 
       <div className="narrator-section">
-        <Narrator />
+        <div className="narrator-avatar">
+          <Narrator />
+        </div>
 
         <div className="narrator-bubble">
-          <NarratorBubble text={currentDialogue.text}
-            onClick={() =>
-              setCurrentDialogueIndex(index =>
-                Math.min(index + 1, narrationScripts.length - 1))
-            }
-          />
+          <NarratorBubble text={currentDialogue.text} />
+        </div>
+
+        <div className="exploration-timer">
+          {isExplorationActive && (
+            <ExplorationTimer
+              duration={120}
+              unlockAfter={30}
+              onFinished={() => {
+                console.log("Exploration finished");
+              }}
+            />
+          )}
         </div>
       </div>
-
 
       <SpeciesInfoModal
         species={selectedSpecies}
         ecosystemState={ecosystemState}
-        onClose={() => setSelectedSpecies(null)}
+        onClose={handleModalClose}
       />
 
       {!hasStarted && (

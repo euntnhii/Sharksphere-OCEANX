@@ -1,4 +1,4 @@
-//render ocean protector and speech bubble
+//render ocean protector
 
 import "./Narrator.css";
 import narratorImage from "../../assets/oceanProtector/fin-pose-5.png";

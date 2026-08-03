@@ -1,4 +1,4 @@
-//receives text as prop and displays it in a bubble with a tail
+//display current narration text in a speech bubble
 
 import "./NarratorBubble.css";
 

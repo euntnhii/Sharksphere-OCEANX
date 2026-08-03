@@ -45,13 +45,13 @@ export function DisplayPanel({
     return (
         <div className="display-panel">
 
-            <div className="display-card">
+            <div className="display-card" id="anomaly-panel">
                 <div className="anomaly-section">
                     <AnomalyIndicator anomalyResult={anomalyResult} />
                 </div>
             </div>
 
-            <div className="display-card">
+            <div className="display-card" id="population-section">
                 {/* Left Section (Population counts) */}
                 <div className="population-section">
 
