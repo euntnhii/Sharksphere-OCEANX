@@ -5,15 +5,3 @@
     z-index: 1500;
     pointer-events: auto;
 }
-
-/* Temporary */
-
-.overlay-full {}
-
-.overlay-simulation {}
-
-.overlay-slider {}
-
-.overlay-display {}
-
-.overlay-anomaly {}

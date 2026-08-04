@@ -54,7 +54,7 @@ export function App() {
   useEffect(() => {
     const audio = new Audio(underwater_ambience);
     audio.loop = true;
-    audio.volume = 0.7;
+    audio.volume = 0.6;
 
     audioRef.current = audio;
 
@@ -263,7 +263,7 @@ export function App() {
 
       setIsExplorationActive(false);
 
-      console.log("Go to next screen");
+      window.location.href = "https://yhtan752-ai.github.io/ocean-research-mission/pages/index7.html"
     }
 
     finishExploration();
