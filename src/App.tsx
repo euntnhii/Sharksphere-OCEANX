@@ -47,13 +47,14 @@ export function App() {
   const narratorText = additionalNarration ?? currentDialogue?.text;
   const [explorationFinished, setExplorationFinished] = useState(false);
   const hasPlayedEndNarrationRef = useRef(false);
+  const anomalyTimeoutRef = useRef<number | null>(null);
 
 
   //load audio
   useEffect(() => {
     const audio = new Audio(underwater_ambience);
     audio.loop = true;
-    audio.volume = 0.9;
+    audio.volume = 0.7;
 
     audioRef.current = audio;
 
@@ -75,6 +76,7 @@ export function App() {
       setCurrentDialogueIndex(null);
       setIsExplorationActive(true);
     }
+
   }
 
   function handleModalClose() {
@@ -114,8 +116,6 @@ export function App() {
   //handle start simulation
   function handleStart() {
     setHasStarted(true);
-
-    audioRef.current?.play().catch(console.error);
   }
 
   //update states
@@ -144,11 +144,15 @@ export function App() {
     //update entities
     setEntities(newEntities);
 
-    //create new anomaly result
-    const newAnomalyResult = await getAnomalyResult(newEcosystemState);
+    //handle anomaly result after delay
+    if (anomalyTimeoutRef.current) {
+      clearTimeout(anomalyTimeoutRef.current);
+    }
 
-    //update anomaly result
-    setAnomalyResult(newAnomalyResult);
+    anomalyTimeoutRef.current = window.setTimeout(async () => {
+      const result = await getAnomalyResult(newEcosystemState);
+      setAnomalyResult(result);
+    }, 700);
 
     // Stop all blinking
     setBlinkingSpecies([]);
@@ -205,6 +209,18 @@ export function App() {
     }, 600);
 
   };
+
+  //play audio during exploration mode
+  useEffect(() => {
+    if (!audioRef.current) return;
+
+    if (isExplorationActive) {
+      audioRef.current.play().catch(console.error);
+    } else {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+  }, [isExplorationActive]);
 
   //cleanup timeout on unmount
   useEffect(() => {
