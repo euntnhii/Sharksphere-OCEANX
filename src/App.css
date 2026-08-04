@@ -135,13 +135,14 @@ body {
 
 .narrator-section {
   width: 88%;
-  max-height: 280px;
+  height: 280px;
   display: flex;
   align-items: flex-end;
   justify-content: flex-start;
 
   gap: 40px;
   margin-top: -100px;
+  pointer-events: none;
 }
 
 .narrator-avatar {
