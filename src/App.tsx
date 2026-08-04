@@ -17,8 +17,8 @@ import { playDialogue } from "./narration/narrationController";
 import { NarrationOverlay } from "./components/Narrator/NarrationOverlay";
 import { ExplorationTimer } from "./components/ExplorationTimer";
 import type { SharkZone } from "./narration/addNarration";
-import { addNarration, getExplorationZone } from "./narration/addNarration";
-import { playZoneNarration } from "./narration/addNarrationController";
+import { addNarration, getExplorationZone, endExplorationNarration } from "./narration/addNarration";
+import { playNarration } from "./narration/addNarrationController";
 
 export function App() {
 
@@ -34,8 +34,8 @@ export function App() {
   const [blinkEnabled, setBlinkEnabled] = useState(false); //state to track if blinking is enabled
   const allSpecies = ["Blacktip Reef Shark", "Striated Surgeonfish", "Bullethead Parrotfish", "Manybar Goatfish", "Cleaner Shrimp", "Reef Builder"];
   const [hasStarted, setHasStarted] = useState(false);
-  const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
-  const currentDialogue = narrationScripts[currentDialogueIndex];
+  const [currentDialogueIndex, setCurrentDialogueIndex] = useState<number | null>(0);
+  const currentDialogue = currentDialogueIndex === null ? null : narrationScripts[currentDialogueIndex];
   const [hasMovedSlider, setHasMovedSlider] = useState(false);
   const [isExplorationActive, setIsExplorationActive] = useState(false);
   const [sliderLocked, setSliderLocked] = useState(false);
@@ -43,6 +43,10 @@ export function App() {
   const lastZoneRef = useRef<SharkZone | null>(null);
   const narrationTimeoutRef = useRef<number | null>(null);
   const [isZoneNarrating, setIsZoneNarrating] = useState(false);
+  const isZoneNarratingRef = useRef(false);
+  const narratorText = additionalNarration ?? currentDialogue?.text;
+  const [explorationFinished, setExplorationFinished] = useState(false);
+  const hasPlayedEndNarrationRef = useRef(false);
 
 
   //load audio
@@ -60,11 +64,15 @@ export function App() {
 
 
   function advanceDialogue() {
+
+    if (currentDialogueIndex === null) return;
+
     const nextIndex = currentDialogueIndex + 1;
 
     if (nextIndex < narrationScripts.length) {
       setCurrentDialogueIndex(nextIndex);
     } else {
+      setCurrentDialogueIndex(null);
       setIsExplorationActive(true);
     }
   }
@@ -72,7 +80,7 @@ export function App() {
   function handleModalClose() {
     setSelectedSpecies(null);
 
-    if (currentDialogue.advance === "modal-close") {
+    if (currentDialogue?.advance === "modal-close") {
       setTimeout(
         advanceDialogue, currentDialogue.pauseAfter ?? 0);
     }
@@ -80,7 +88,7 @@ export function App() {
 
   //play dialogue when currentDialogueIndex changes
   useEffect(() => {
-    if (!hasStarted) return;
+    if (!hasStarted || currentDialogueIndex === null) return;
 
     const dialogue = narrationScripts[currentDialogueIndex];
 
@@ -115,7 +123,7 @@ export function App() {
 
     //tutorial part (advance dialogue after user engages with slider)
     if (
-      currentDialogue.advance === "slider" &&
+      currentDialogue?.advance === "slider" &&
       !hasMovedSlider
     ) {
       setHasMovedSlider(true);
@@ -153,42 +161,52 @@ export function App() {
     });
 
     // Additional narration
-    if (isExplorationActive) {
+    if (!isExplorationActive) {
+      return;
+    }
 
-      if (narrationTimeoutRef.current) {
-        clearTimeout(narrationTimeoutRef.current);
+    if (narrationTimeoutRef.current) {
+      clearTimeout(narrationTimeoutRef.current);
+    }
+
+    narrationTimeoutRef.current = window.setTimeout(async () => {
+      const zone = getExplorationZone(newSharkPopulation);
+
+      if (zone === lastZoneRef.current || isZoneNarratingRef.current) {
+        return;
       }
 
-      narrationTimeoutRef.current = window.setTimeout(async () => {
-        const zone = getExplorationZone(newSharkPopulation);
+      const narration = addNarration[zone].narration;
 
-        if (zone !== lastZoneRef.current && !isZoneNarrating) {
-          lastZoneRef.current = zone;
+      isZoneNarratingRef.current = true;
+      setSliderLocked(true);
+      setIsZoneNarrating(true);
 
-          const narration = addNarration[zone];
+      await playNarration(narration, {
+        onStart: () => {
 
-          await playZoneNarration(narration, {
-            onStart: () => {
-              setSliderLocked(true);
-              setIsZoneNarrating(true);
-            },
+        },
 
-            onText: (text) => {
-              setAdditionalNarration(text);
-            },
+        onText: (text) => {
+          setAdditionalNarration(text);
+        },
 
-            onFinish: () => {
-              setAdditionalNarration(null);
-              setSliderLocked(false);
-              setIsZoneNarrating(false);
-            }
-          });
-
+        onFinish: () => {
+          setAdditionalNarration(null);
+          setSliderLocked(false);
+          setIsZoneNarrating(false);
+          isZoneNarratingRef.current = false;
         }
-      }, 1000);
-    }
+      });
+
+      lastZoneRef.current = zone;
+
+
+    }, 600);
+
   };
 
+  //cleanup timeout on unmount
   useEffect(() => {
     return () => {
       if (narrationTimeoutRef.current) {
@@ -197,13 +215,52 @@ export function App() {
     };
   }, []);
 
+  //handle exploration finished
+  useEffect(() => {
+    if (!explorationFinished) return;
+
+    if (isZoneNarratingRef.current) return;
+
+    if (hasPlayedEndNarrationRef.current) return;
+
+    hasPlayedEndNarrationRef.current = true;
+
+    async function finishExploration() {
+
+      isZoneNarratingRef.current = true;
+      setSliderLocked(true);
+      setIsZoneNarrating(true);
+
+      await playNarration(endExplorationNarration, {
+        onStart: () => { },
+
+        onText: (text) => {
+          setAdditionalNarration(text);
+        },
+
+        onFinish: () => {
+          setAdditionalNarration(null);
+          setIsZoneNarrating(false);
+          isZoneNarratingRef.current = false;
+        }
+      });
+
+      setIsExplorationActive(false);
+
+      console.log("Go to next screen");
+    }
+
+    finishExploration();
+
+  }, [explorationFinished, isZoneNarrating]);
+
 
   //UI to return
   return (
 
     <div className="app-layout">
 
-      <NarrationOverlay mode={currentDialogue.overlay}
+      <NarrationOverlay mode={currentDialogue?.overlay ?? "none"}
       />
 
       <div className="mission-header">Mission 2</div>
@@ -250,11 +307,11 @@ export function App() {
           <Narrator />
         </div>
 
-        <div className="narrator-bubble">
-          <NarratorBubble
-            text={additionalNarration ?? currentDialogue.text}
-          />
-        </div>
+        {narratorText && (
+          <div className="narrator-bubble">
+            <NarratorBubble text={narratorText} />
+          </div>
+        )}
 
         <div className="exploration-timer">
           {isExplorationActive && (
@@ -262,7 +319,8 @@ export function App() {
               duration={120}
               unlockAfter={30}
               onFinished={() => {
-                console.log("Exploration finished");
+                setSliderLocked(true);
+                setExplorationFinished(true);
               }}
             />
           )}

@@ -1,6 +1,6 @@
 //display exploration countdown timer and ffwd button after 30 seconds
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./ExplorationTimer.css";
 
 type ExplorationTimerProps = {
@@ -23,22 +23,24 @@ export function ExplorationTimer({ duration, unlockAfter, onFinished }: Explorat
         return () => clearTimeout(unlockTimeout);
     }, [unlockAfter]);
 
+    const hasFinished = useRef(false);
+
     useEffect(() => {
+        if (remainingTime === 0 && !hasFinished.current) {
+            hasFinished.current = true;
+            onFinished();
+        }
+    }, [remainingTime, onFinished]);
+
+    useEffect(() => {
+        if (remainingTime === 0) return;
+
         const interval = setInterval(() => {
-            setRemainingTime(previous => {
-
-                if (previous <= 1) {
-                    clearInterval(interval);
-                    onFinished();
-                    return 0;
-                }
-
-                return previous - 1;
-            });
+            setRemainingTime(time => Math.max(time - 1, 0));
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [onFinished]);
+    }, [remainingTime]);
 
 
     const minutes = Math.floor(remainingTime / 60);
@@ -66,7 +68,15 @@ export function ExplorationTimer({ duration, unlockAfter, onFinished }: Explorat
 
                         <div className="confirmation-buttons">
 
-                            <button onClick={onFinished}>
+                            <button
+                                onClick={() => {
+                                    if (!hasFinished.current) {
+                                        hasFinished.current = true;
+                                        setShowConfirmation(false);
+                                        onFinished();
+                                    }
+                                }}
+                            >
                                 Confirm
                             </button>
                             <button onClick={() => setShowConfirmation(false)}>

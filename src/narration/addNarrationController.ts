@@ -1,7 +1,7 @@
-import type { AddNarrationZone } from "./addNarration";
+import type { AddNarrationPart } from "./addNarration";
 
-export async function playZoneNarration(
-    zone: AddNarrationZone,
+export async function playNarration(
+    narration: AddNarrationPart[],
     callbacks: {
         onStart: () => void;
         onFinish: () => void;
@@ -11,7 +11,7 @@ export async function playZoneNarration(
 
     callbacks.onStart();
 
-    for (const part of zone.narration) {
+    for (const part of narration) {
 
         callbacks.onText(part.text);
 

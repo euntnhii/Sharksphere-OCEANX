@@ -21,6 +21,8 @@ import endangered4 from "../assets/audio/narration/additional/endangered4-audio.
 import slightlyElevated4 from "../assets/audio/narration/additional/slightlyElevated4-audio.mp3";
 import elevated4 from "../assets/audio/narration/additional/elevated4-audio.mp3";
 import overpopulated4 from "../assets/audio/narration/additional/overpopulated4-audio.mp3";
+import end1 from "../assets/audio/narration/additional/end1-audio.mp3";
+import end2 from "../assets/audio/narration/additional/end2-audio.mp3";
 
 export type SharkZone = "endangered" | "declining" | "optimal" | "slightlyElevated" | "elevated" | "overpopulated";
 
@@ -113,3 +115,15 @@ export function getExplorationZone(sharkPopulation: number): SharkZone {
     }
     return "overpopulated";
 };
+
+
+export const endExplorationNarration = [
+    {
+        text: "Oh, time is up!",
+        audio: end1
+    },
+    {
+        text: "Thank you, fellow scientist, for exploring the ecosystem together with me!",
+        audio: end2
+    }
+];

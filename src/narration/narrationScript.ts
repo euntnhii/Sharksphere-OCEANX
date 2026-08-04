@@ -80,7 +80,7 @@ export const narrationScripts: NarrationScript[] = [
     },
     {
         id: "tutorial-3.5",
-        text: "The different blinking colours represent the different population health levels of each species. Red represents an unhealthy level, while yellow represents a warning, and green represents a healthy level.",
+        text: "The different blinking colours represent different population health levels of each species. Red: Unhealthy, Yellow: Warning, Green: Healthy.",
         overlay: "display",
         advance: "auto"
     },
