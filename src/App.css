@@ -7,6 +7,13 @@
   padding-right: 100px;
   padding-top: 36px;
   gap: 25px;
+  opacity: 1;
+  transition: opacity 3s ease;
+}
+
+.app-layout.fade-out {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .mission-header {

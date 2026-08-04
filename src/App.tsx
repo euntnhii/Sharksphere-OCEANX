@@ -48,6 +48,7 @@ export function App() {
   const [explorationFinished, setExplorationFinished] = useState(false);
   const hasPlayedEndNarrationRef = useRef(false);
   const anomalyTimeoutRef = useRef<number | null>(null);
+  const [isFadingOut, setIsFadingOut] = useState(false);
 
 
   //load audio
@@ -116,6 +117,26 @@ export function App() {
   //handle start simulation
   function handleStart() {
     setHasStarted(true);
+  }
+
+  //fade out audio function
+  async function fadeOutAudio(duration = 3000) {
+    if (!audioRef.current) return;
+
+    const audio = audioRef.current;
+
+    const startVolume = audio.volume;
+    const steps = 50;
+    const interval = duration / steps;
+
+    for (let i = 0; i < steps; i++) {
+      audio.volume = startVolume * (1 - (i + 1) / steps);
+      await new Promise(resolve => setTimeout(resolve, interval));
+    }
+
+    audio.pause();
+    audio.currentTime = 0;
+    audio.volume = startVolume;
   }
 
   //update states
@@ -216,9 +237,6 @@ export function App() {
 
     if (isExplorationActive) {
       audioRef.current.play().catch(console.error);
-    } else {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
     }
   }, [isExplorationActive]);
 
@@ -261,9 +279,15 @@ export function App() {
         }
       });
 
+      setIsFadingOut(true);
+
+      await Promise.all([
+        fadeOutAudio(3000),
+        new Promise(resolve => setTimeout(resolve, 3000))
+      ]);
       setIsExplorationActive(false);
 
-      window.location.href = "https://yhtan752-ai.github.io/ocean-research-mission/pages/index7.html"
+      window.location.replace("https://yhtan752-ai.github.io/ocean-research-mission/pages/index7.html");
     }
 
     finishExploration();
@@ -274,7 +298,7 @@ export function App() {
   //UI to return
   return (
 
-    <div className="app-layout">
+    <div className={`app-layout ${isFadingOut ? "fade-out" : ""}`}>
 
       <NarrationOverlay mode={currentDialogue?.overlay ?? "none"}
       />
