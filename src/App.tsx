@@ -240,6 +240,10 @@ export function App() {
     }
   }, [isExplorationActive]);
 
+  useEffect(() => {
+    handleStart();
+  }, []);
+
   //cleanup timeout on unmount
   useEffect(() => {
     return () => {
