@@ -373,13 +373,13 @@ export function App() {
         onClose={handleModalClose}
       />
 
-      {!hasStarted && (
+      {/* {!hasStarted && (
         <div className="start-overlay" onClick={handleStart}>
           <div className="start-message">
             <h3>Click anywhere to begin</h3>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
