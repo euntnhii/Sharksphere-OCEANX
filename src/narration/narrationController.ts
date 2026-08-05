@@ -32,7 +32,7 @@ export function playDialogue(
 
     currentAudio.play().catch(error => {
         console.error(error);
-        onFinished();
+        //onFinished();
     });
 
     return currentAudio;
