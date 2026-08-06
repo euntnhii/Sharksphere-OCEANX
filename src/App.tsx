@@ -19,6 +19,7 @@ import { ExplorationTimer } from "./components/ExplorationTimer";
 import type { SharkZone } from "./narration/addNarration";
 import { addNarration, getExplorationZone, endExplorationNarration } from "./narration/addNarration";
 import { playNarration } from "./narration/addNarrationController";
+import { StartNarrator } from "./components/Narrator/StartNarrator";
 
 export function App() {
 
@@ -48,6 +49,7 @@ export function App() {
   const [explorationFinished, setExplorationFinished] = useState(false);
   const hasPlayedEndNarrationRef = useRef(false);
   const anomalyTimeoutRef = useRef<number | null>(null);
+  const [isStartFading, setIsStartFading] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
 
 
@@ -116,7 +118,10 @@ export function App() {
 
   //handle start simulation
   function handleStart() {
-    setHasStarted(true);
+    setIsStartFading(true);
+    setTimeout(() => {
+      setHasStarted(true);
+    }, 2000);
   }
 
   //fade out audio function
@@ -374,10 +379,21 @@ export function App() {
       />
 
       {!hasStarted && (
-        <div className="start-overlay" onClick={handleStart}>
-          <div className="start-message">
-            <h3>Click anywhere to begin</h3>
+        <div className={`start-screen ${isStartFading ? "fade-out" : ""}`}>
+          <div className="start-mission-header">Mission 2</div>
+          <div className="para-section">
+            <h3>Before you begin</h3>
+            <div className="note">
+              <p>Hello, fellow scientists!</p>
+              <p>The following simulation demonstrates how changes in Blacktip Reef Shark populations can affect the rest of the reef ecosystem.</p>
+              <p>This simulation has been created for educational purposes and simplifies real-world ecological interactions. Do note that it does not consider all ecological factors that may be found in natural coral reef ecosystems!</p>
+            </div>
           </div>
+          <button className="start-button" onClick={handleStart}>
+            Let's go!
+          </button>
+
+          <StartNarrator />
         </div>
       )}
     </div>

@@ -8,3 +8,16 @@
     user-select: none;
     pointer-events: none;
 }
+
+.start-narrator {
+    position: absolute;
+    bottom: -70px;
+    left: -20px;
+
+    pointer-events: none;
+}
+
+.start-narrator-image {
+    height: 480px;
+    width: auto;
+}
