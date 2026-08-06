@@ -231,8 +231,8 @@ body {
   justify-content: flex-start;
 
   gap: 40px;
-  margin-top: -100px;
-  pointer-events: none;
+  margin-top: -96px;
+  pointer-events: auto;
 }
 
 .narrator-avatar {

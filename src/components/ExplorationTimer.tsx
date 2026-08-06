@@ -14,8 +14,12 @@ export function ExplorationTimer({ duration, unlockAfter, onFinished }: Explorat
     const [remainingTime, setRemainingTime] = useState(duration);
     const [isUnlocked, setIsUnlocked] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
+    const hasFinished = useRef(false);
 
+    //unlock button after the specified time
     useEffect(() => {
+        if (hasFinished.current) return;
+
         const unlockTimeout = setTimeout(() => {
             setIsUnlocked(true);
         }, unlockAfter * 1000);
@@ -23,8 +27,8 @@ export function ExplorationTimer({ duration, unlockAfter, onFinished }: Explorat
         return () => clearTimeout(unlockTimeout);
     }, [unlockAfter]);
 
-    const hasFinished = useRef(false);
 
+    //call onFinished when the timer reaches 0
     useEffect(() => {
         if (remainingTime === 0 && !hasFinished.current) {
             hasFinished.current = true;
@@ -32,8 +36,10 @@ export function ExplorationTimer({ duration, unlockAfter, onFinished }: Explorat
         }
     }, [remainingTime, onFinished]);
 
+
+    //countdown timer effect
     useEffect(() => {
-        if (remainingTime === 0) return;
+        if (hasFinished.current || remainingTime === 0) return;
 
         const interval = setInterval(() => {
             setRemainingTime(time => Math.max(time - 1, 0));
