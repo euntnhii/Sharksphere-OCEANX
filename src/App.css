@@ -233,6 +233,7 @@ body {
   gap: 40px;
   margin-top: -96px;
   pointer-events: auto;
+  pointer-events: none;
 }
 
 .narrator-avatar {
