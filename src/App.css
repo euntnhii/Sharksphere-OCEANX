@@ -255,5 +255,5 @@ body {
 .exploration-timer {
   align-self: flex-start;
   margin-top: 70px;
-
+  pointer-events: auto;
 }
