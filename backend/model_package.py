@@ -12,6 +12,36 @@ FEATURE_ORDER = [
     "Small_Invertebrates",
 ]
 
+# expert-provided ratios for a healthy reef at equilibrium
+EXPERT_BASELINE_RAW = {
+    "Apex_Predators": 1.442,
+    "Herbivore_Scrapers": 5.67,
+    "Turf_Brushers": 4.02,
+    "Invertebrate_Prey_Hunters": 2.47,
+    "Small_Invertebrates": 10.277,
+}
+# convert to proportions (sum = 1) so the baseline lives in the same space as the surveys
+_raw_sum = sum(EXPERT_BASELINE_RAW.values())
+EXPERT_BASELINE = {c: EXPERT_BASELINE_RAW[c] / _raw_sum for c in FEATURE_ORDER}
+BASELINE_VEC = np.array([EXPERT_BASELINE[c] for c in FEATURE_ORDER], dtype=float)
+
+
+def to_proportions(X):
+    """Normalise count vectors to proportions (rows sum to 1).
+    The model operates in proportion space: survey magnitude is ignored,
+    only community composition matters."""
+    X = np.atleast_2d(np.asarray(X, dtype=float))
+    totals = X.sum(axis=1, keepdims=True)
+    return np.divide(X, totals, out=np.zeros_like(X), where=totals > 0)
+
+
+def deviation_from_baseline(X):
+    """Normalised euclidean distance from the expert healthy equilibrium (0 at baseline).
+    Assumes X is already in proportion space."""
+    X = np.atleast_2d(X)
+    rel = np.abs(X - BASELINE_VEC) / BASELINE_VEC
+    return np.sqrt((rel ** 2).sum(axis=1))
+
 
 def decision_function_single_tree(iforest, tree_idx, X):
     return _score_samples(iforest, tree_idx, X) - iforest.offset_
@@ -153,36 +183,54 @@ def prepare_input(data):
 
 
 class IFDiffiPackage:
-    def __init__(self, model, feature_order):
+    def __init__(self, model, feature_order, lambda_if=1.0):
         self.model = model
         self.feature_order = list(feature_order)
+        self.lambda_if = float(lambda_if)
+        # IF anomaly of the expert baseline itself, used to recenter the IF term
+        self.base_if_anom = float(-model.score_samples(BASELINE_VEC.reshape(1, -1))[0])
+
+    def _anchored_score(self, x, if_score):
+        # baseline-anchored anomaly: 0 at the expert baseline, strictly positive elsewhere.
+        # deviation term = ecological distance from equilibrium;
+        # IF term = kicks in only when the state is more out-of-distribution than the baseline.
+        if_term = max(0.0, (-if_score) - self.base_if_anom)
+        return float(deviation_from_baseline(x)[0] + self.lambda_if * if_term)
 
     def predict_one(self, row):
-        X = prepare_input([row])[self.feature_order]
-        x = X.iloc[0].to_numpy()
+        # frontend sends raw counts -> convert to proportions before scoring
+        X = to_proportions(prepare_input([row])[self.feature_order])
+        x = X[0]
 
         pred = int(self.model.predict(X)[0])
         score = float(self.model.score_samples(X)[0])
         diffi_scores, exec_time = local_diffi(self.model, x)
 
+        anchored = self._anchored_score(x, score)
+
         return {
             "prediction": pred,
-            "anomaly_score": score,
+            "anomaly_score": -anchored,
+            "baseline_deviation": float(deviation_from_baseline(x)[0]),
             "diffi_scores": dict(zip(self.feature_order, diffi_scores.tolist())),
             "diffi_runtime_sec": float(exec_time),
         }
 
     def predict_batch(self, data):
-        X = prepare_input(data)[self.feature_order]
+        # frontend sends raw counts -> convert to proportions before scoring
+        X = to_proportions(prepare_input(data)[self.feature_order])
         preds = self.model.predict(X)
         scores = self.model.score_samples(X)
 
         diffi_out = []
         for i in range(len(X)):
-            fi, exec_time = local_diffi(self.model, X.iloc[i].to_numpy())
+            fi, exec_time = local_diffi(self.model, X[i])
+            x = X[i]
+            anchored = self._anchored_score(x, scores[i])
             diffi_out.append({
                 "prediction": int(preds[i]),
-                "anomaly_score": float(scores[i]),
+                "anomaly_score": -anchored,
+                "baseline_deviation": float(deviation_from_baseline(x)[0]),
                 "diffi_scores": dict(zip(self.feature_order, fi.tolist())),
                 "diffi_runtime_sec": float(exec_time),
             })

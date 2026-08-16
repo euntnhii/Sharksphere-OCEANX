@@ -25,7 +25,7 @@ def predict(data: dict):
 
     score = result["anomaly_score"]
 
-    percentage = 100 / (1 + math.exp(25 * (score + 0.60))) #-0.60 threshold for anomaly score, 25 steepness of the curve
+    percentage = 100 / (1 + math.exp(3 * (score + 1.0))) # anchor at baseline
 
     result["anomaly_percentage"] = percentage
 
