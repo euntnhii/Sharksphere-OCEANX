@@ -49,6 +49,7 @@
 .scientific-name {
     margin-left: 6px;
     color: #07273b;
+    font-style: italic;
 }
 
 .species-sprite {
