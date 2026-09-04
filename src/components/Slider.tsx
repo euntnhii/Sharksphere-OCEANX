@@ -28,13 +28,13 @@ export function Slider({
                     className="population-slider"
                     type="range"
                     min="0"
-                    max="14"
+                    max="6"
                     value={sharkPopulation}
                     onChange={handleChange}
                     disabled={disabled}
                 />
 
-                <span className="slider-max">14 Sharks</span>
+                <span className="slider-max">6 Sharks</span>
 
             </div>
 
