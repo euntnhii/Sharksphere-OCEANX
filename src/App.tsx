@@ -25,6 +25,8 @@ export function App() {
 
   //audio ref
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const dialogueAudioRef = useRef<HTMLAudioElement | null>(null);
+  const narrationSkipRef = useRef<(() => void) | null>(null);
 
   //create states
   const [ecosystemState, setEcosystemState] = useState<EcosystemState>(initialEcosystemState);
@@ -109,12 +111,41 @@ export function App() {
       );
     });
 
+    dialogueAudioRef.current = audio ?? null;
+
     return () => {
       audio?.pause();
       audio?.removeAttribute("src");
       audio?.load();
+
+      if (dialogueAudioRef.current === audio) {
+        dialogueAudioRef.current = null;
+      }
     };
   }, [currentDialogueIndex, hasStarted]);
+
+  //handle skip dialogue for intro/tutorial
+  function handleSkipDialogue() {
+
+    //stop normal dialogue audio
+    if (dialogueAudioRef.current) {
+      dialogueAudioRef.current.pause();
+      dialogueAudioRef.current.currentTime = 0;
+      dialogueAudioRef.current = null;
+    }
+
+    if (currentDialogueIndex !== null) {
+      advanceDialogue();
+    }
+  }
+
+  //handle skip narration for exploration mode
+  function handleSkipNarration() {
+
+    if (narrationSkipRef.current) {
+      narrationSkipRef.current();
+    }
+  }
 
   //handle start simulation
   function handleStart() {
@@ -212,9 +243,8 @@ export function App() {
       setSliderLocked(true);
       setIsZoneNarrating(true);
 
-      await playNarration(narration, {
+      const narrationController = playNarration(narration, {
         onStart: () => {
-
         },
 
         onText: (text) => {
@@ -226,14 +256,16 @@ export function App() {
           setSliderLocked(false);
           setIsZoneNarrating(false);
           isZoneNarratingRef.current = false;
+          narrationSkipRef.current = null;
         }
       });
 
-      lastZoneRef.current = zone;
+      narrationSkipRef.current = narrationController.skip;
 
+      await narrationController.promise;
 
+      narrationSkipRef.current = null;
     }, 600);
-
   };
 
   //play audio during exploration mode
@@ -265,12 +297,11 @@ export function App() {
     hasPlayedEndNarrationRef.current = true;
 
     async function finishExploration() {
-
       isZoneNarratingRef.current = true;
       setSliderLocked(true);
       setIsZoneNarrating(true);
 
-      await playNarration(endExplorationNarration, {
+      const narrationController = playNarration(endExplorationNarration, {
         onStart: () => { },
 
         onText: (text) => {
@@ -284,15 +315,20 @@ export function App() {
         }
       });
 
+      await narrationController.promise;
+
       setIsFadingOut(true);
 
       await Promise.all([
         fadeOutAudio(3000),
         new Promise(resolve => setTimeout(resolve, 3000))
       ]);
+
       setIsExplorationActive(false);
 
-      window.location.replace("https://yhtan752-ai.github.io/ocean-research-mission/pages/index7.html");
+      window.location.replace(
+        "https://yhtan752-ai.github.io/ocean-research-mission/pages/index7.html"
+      );
     }
 
     finishExploration();
@@ -353,8 +389,26 @@ export function App() {
         </div>
 
         {narratorText && (
-          <div className="narrator-bubble">
-            <NarratorBubble text={narratorText} />
+          <div className="narrator-dialogue">
+            <div className="narrator-bubble">
+              <NarratorBubble text={narratorText} />
+
+
+            </div>
+            {!explorationFinished && (
+              <button
+                className="skip-dialogue-button"
+                onClick={() => {
+                  if (currentDialogueIndex !== null) {
+                    handleSkipDialogue();
+                  } else if (isZoneNarratingRef.current) {
+                    handleSkipNarration();
+                  }
+                }}
+              >
+                Skip to next dialogue →
+              </button>)}
+
           </div>
         )}
 
@@ -398,5 +452,6 @@ export function App() {
       )}
     </div>
   );
-};
+}
+
 

@@ -38,6 +38,7 @@ function calculateCoralHealth(algaeLevel: number): number {
     };
 };
 
+//display coral health (more dramatic difference)
 function calculateDisplayCoralHealth(actualHealth: number): number {
     const damage = 100 - actualHealth;
     const amplifiedDamage = damage * 12;
