@@ -6,12 +6,10 @@ export type NarrationId =
     | "intro-4"
     | "intro-5"
     | "intro-6"
-    | "intro-7"
     | "tutorial-0"
     | "tutorial-1"
     | "tutorial-2"
     | "tutorial-3"
-    | "tutorial-3.5"
     | "tutorial-4"
     | "tutorial-5"
     | "tutorial-6"
@@ -19,8 +17,7 @@ export type NarrationId =
     | "tutorial-8"
     | "tutorial-9"
     | "tutorial-10"
-    | "tutorial-11"
-    | "tutorial-12";
+    | "tutorial-11";
 
 
 export type NarrationScript = {

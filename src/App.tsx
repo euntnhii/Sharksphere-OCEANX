@@ -16,8 +16,7 @@ import { narrationScripts } from "./narration/narrationScript";
 import { playDialogue } from "./narration/narrationController";
 import { NarrationOverlay } from "./components/Narrator/NarrationOverlay";
 import { ExplorationTimer } from "./components/ExplorationTimer";
-import type { SharkZone } from "./narration/addNarration";
-import { addNarration, getExplorationZone, endExplorationNarration } from "./narration/addNarration";
+import { addNarration, endExplorationNarration } from "./narration/addNarration";
 import { playNarration } from "./narration/addNarrationController";
 import { StartNarrator } from "./components/Narrator/StartNarrator";
 
@@ -43,7 +42,7 @@ export function App() {
   const [isExplorationActive, setIsExplorationActive] = useState(false);
   const [sliderLocked, setSliderLocked] = useState(false);
   const [additionalNarration, setAdditionalNarration] = useState<string | null>(null);
-  const lastZoneRef = useRef<SharkZone | null>(null);
+  const lastPopulationRef = useRef<number | null>(null);
   const narrationTimeoutRef = useRef<number | null>(null);
   const [isZoneNarrating, setIsZoneNarrating] = useState(false);
   const isZoneNarratingRef = useRef(false);
@@ -231,13 +230,16 @@ export function App() {
     }
 
     narrationTimeoutRef.current = window.setTimeout(async () => {
-      const zone = getExplorationZone(newSharkPopulation);
+      const population = newSharkPopulation;
 
-      if (zone === lastZoneRef.current || isZoneNarratingRef.current) {
+      if (
+        population === lastPopulationRef.current ||
+        isZoneNarratingRef.current
+      ) {
         return;
       }
 
-      const narration = addNarration[zone].narration;
+      const narration = addNarration[population];
 
       isZoneNarratingRef.current = true;
       setSliderLocked(true);

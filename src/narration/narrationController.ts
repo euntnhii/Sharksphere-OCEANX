@@ -31,7 +31,10 @@ export function playDialogue(
     };
 
     currentAudio.play().catch(error => {
-        console.error(error);
+        if (error.name !== "AbortError") {
+            console.error(error);
+        }
+
         onFinished();
     });
 
