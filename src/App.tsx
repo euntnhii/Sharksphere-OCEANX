@@ -19,6 +19,7 @@ import { ExplorationTimer } from "./components/ExplorationTimer";
 import { addNarration, endExplorationNarration } from "./narration/addNarration";
 import { playNarration } from "./narration/addNarrationController";
 import { StartNarrator } from "./components/Narrator/StartNarrator";
+import { preloadNarrationAudio } from "./narration/preloadNarration";
 
 export function App() {
 
@@ -52,7 +53,35 @@ export function App() {
   const anomalyTimeoutRef = useRef<number | null>(null);
   const [isStartFading, setIsStartFading] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
+
+  //start preload
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadAssets() {
+      try {
+        await preloadNarrationAudio();
+
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error("Failed to preload assets:", error);
+
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadAssets();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   //load audio
   useEffect(() => {
@@ -440,8 +469,8 @@ export function App() {
               <p>This simulation has been created for educational purposes and simplifies real-world ecological interactions. Do note that it does not consider all ecological factors that may be found in natural coral reef ecosystems!</p>
             </div>
           </div>
-          <button className="start-button" onClick={handleStart}>
-            Let's go!
+          <button className="start-button" onClick={handleStart} disabled={isLoading}>
+            {isLoading ? "Setting things up..." : "Let's go!"}
           </button>
 
           <StartNarrator />

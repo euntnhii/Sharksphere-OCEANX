@@ -1,13 +1,22 @@
+import underwater_ambience from "../assets/audio/underwater_ambience.mp3";
 import { narrationAudio } from "./narrationAudio";
-import { addNarration } from "./addNarration";
+import { addNarration, endExplorationNarration } from "./addNarration";
 
 export async function preloadNarrationAudio() {
     const sources = [
+        // Intro + tutorial
         ...Object.values(narrationAudio),
 
+        // Exploration narration
         ...Object.values(addNarration)
             .flat()
             .map((part) => part.audio),
+
+        // Ending narration
+        ...endExplorationNarration.map((part) => part.audio),
+
+        // Background ambience
+        underwater_ambience,
     ];
 
     const uniqueSources = [...new Set(sources)];
@@ -19,9 +28,13 @@ export async function preloadNarrationAudio() {
 
                 audio.preload = "auto";
 
-                audio.oncanplaythrough = () => {
+                const finish = () => {
+                    audio.oncanplay = null;
+                    audio.onerror = null;
                     resolve();
                 };
+
+                audio.oncanplay = finish;
 
                 audio.onerror = () => {
                     console.error(`Failed to preload audio: ${src}`);

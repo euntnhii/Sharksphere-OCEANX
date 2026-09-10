@@ -123,11 +123,22 @@
   transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 
-.start-button:hover {
+.start-button:disabled {
+  color: #d0d0d0;
+  cursor: not-allowed;
+  background: linear-gradient(180deg, #b8b8b8 0%, #999999 45%, #858585 100%);
+  box-shadow:
+    0 6px 0 #6f6f6f,
+    0 10px 18px rgba(0, 0, 0, 0.25),
+    inset 0 2px 4px rgba(255, 255, 255, 0.35);
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.25);
+}
+
+.start-button:hover:not(:disabled) {
   background: linear-gradient(180deg, #6fc9ff 0%, #3aa0f5 45%, #268ae8 100%);
 }
 
-.start-button:active {
+.start-button:active:not(:disabled) {
   transform: translateY(4px);
   box-shadow:
     0 2px 0 #1668c0,
