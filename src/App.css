@@ -147,7 +147,7 @@
 }
 
 .loading-container {
-  width: 280px;
+  width: 360px;
   margin: 20px auto;
   text-align: center;
 }
@@ -168,9 +168,9 @@
   width: 0%;
   border-radius: 10px;
   background: linear-gradient(90deg,
-      #5cc0ff 0%,
-      #2f95f0 50%,
-      #1f7fe0 100%);
+      #fdcf9e 0%,
+      #ffbb72 50%,
+      rgb(255, 186, 26) 100%);
   transition: width 0.2s ease;
 }
 
