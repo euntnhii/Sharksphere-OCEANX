@@ -1,17 +1,23 @@
-//control narration playback (play audio, notify when dialogue finishes)
-
 import { narrationAudio } from "./narrationAudio";
 
 let currentAudio: HTMLAudioElement | null = null;
+let playbackId = 0;
 
 export function playDialogue(
     id: keyof typeof narrationAudio,
     onFinished: () => void
 ) {
-    // Stop any narration that's currently playing
+    // Invalidate any previous narration
+    playbackId++;
+    const thisPlaybackId = playbackId;
+
+    // Stop previous audio completely
     if (currentAudio) {
         currentAudio.pause();
         currentAudio.currentTime = 0;
+        currentAudio.onended = null;
+        currentAudio.onerror = null;
+        currentAudio = null;
     }
 
     const source = narrationAudio[id];
@@ -22,21 +28,66 @@ export function playDialogue(
         return;
     }
 
-    currentAudio = new Audio(source);
+    const audio = new Audio(source);
+    audio.preload = "auto";
+    currentAudio = audio;
 
-    currentAudio.onended = () => {
+    audio.onended = () => {
+        // Ignore callbacks from old audio
+        if (thisPlaybackId !== playbackId) {
+            return;
+        }
+
+        currentAudio = null;
+
         setTimeout(() => {
+            // Check again in case another narration started
+            if (thisPlaybackId !== playbackId) {
+                return;
+            }
+
             onFinished();
         }, 200);
     };
 
-    currentAudio.play().catch(error => {
+    audio.onerror = () => {
+        // Ignore errors from old audio
+        if (thisPlaybackId !== playbackId) {
+            return;
+        }
+
+        currentAudio = null;
+        onFinished();
+    };
+
+    audio.play().catch(error => {
+        // Ignore errors caused by intentionally stopping the audio
+        if (thisPlaybackId !== playbackId) {
+            return;
+        }
+
         if (error.name !== "AbortError") {
             console.error(error);
         }
 
+        currentAudio = null;
         onFinished();
     });
 
-    return currentAudio;
+    return audio;
+}
+
+export function stopDialogue() {
+    // Invalidate the current narration
+    playbackId++;
+
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+
+        currentAudio.onended = null;
+        currentAudio.onerror = null;
+
+        currentAudio = null;
+    }
 }

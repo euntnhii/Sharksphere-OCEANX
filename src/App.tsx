@@ -13,7 +13,7 @@ import { Slider } from "./components/Slider";
 import { Narrator } from "./components/Narrator/Narrator";
 import { NarratorBubble } from "./components/Narrator/NarratorBubble";
 import { narrationScripts } from "./narration/narrationScript";
-import { playDialogue } from "./narration/narrationController";
+import { playDialogue, stopDialogue } from "./narration/narrationController";
 import { NarrationOverlay } from "./components/Narrator/NarrationOverlay";
 import { ExplorationTimer } from "./components/ExplorationTimer";
 import { addNarration, endExplorationNarration } from "./narration/addNarration";
@@ -114,8 +114,6 @@ export function App() {
 
     return () => {
       audio?.pause();
-      audio?.removeAttribute("src");
-      audio?.load();
 
       if (dialogueAudioRef.current === audio) {
         dialogueAudioRef.current = null;
@@ -126,12 +124,9 @@ export function App() {
   //handle skip dialogue for intro/tutorial
   function handleSkipDialogue() {
 
-    //stop normal dialogue audio
-    if (dialogueAudioRef.current) {
-      dialogueAudioRef.current.pause();
-      dialogueAudioRef.current.currentTime = 0;
-      dialogueAudioRef.current = null;
-    }
+    stopDialogue();
+
+    dialogueAudioRef.current = null;
 
     if (currentDialogueIndex !== null) {
       advanceDialogue();
