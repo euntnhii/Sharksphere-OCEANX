@@ -20,6 +20,7 @@ import { addNarration, endExplorationNarration } from "./narration/addNarration"
 import { playNarration } from "./narration/addNarrationController";
 import { StartNarrator } from "./components/Narrator/StartNarrator";
 import { preloadNarrationAudio } from "./narration/preloadNarration";
+import { preloadSpriteImages } from "./hooks/preloadAssets";
 
 export function App() {
 
@@ -54,17 +55,31 @@ export function App() {
   const [isStartFading, setIsStartFading] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
 
 
-  //start preload
+  // Start preload
   useEffect(() => {
     let cancelled = false;
 
     async function loadAssets() {
       try {
-        await preloadNarrationAudio();
+        await Promise.all([
+          preloadNarrationAudio((progress) => {
+            if (!cancelled) {
+              setLoadingProgress(progress * 0.5);
+            }
+          }),
+
+          preloadSpriteImages((progress) => {
+            if (!cancelled) {
+              setLoadingProgress(0.5 + progress * 0.5);
+            }
+          }),
+        ]);
 
         if (!cancelled) {
+          setLoadingProgress(1);
           setIsLoading(false);
         }
       } catch (error) {
@@ -82,6 +97,7 @@ export function App() {
       cancelled = true;
     };
   }, []);
+
 
   //load audio
   useEffect(() => {
@@ -472,6 +488,21 @@ export function App() {
           <button className="start-button" onClick={handleStart} disabled={isLoading}>
             {isLoading ? "Setting things up..." : "Let's go!"}
           </button>
+
+          {isLoading && (
+            <div className="loading-container">
+              <div className="loading-bar-background">
+                <div
+                  className="loading-bar-fill"
+                  style={{ width: `${loadingProgress * 100}%` }}
+                />
+              </div>
+
+              <p className="loading-text">
+                Setting things up... {Math.round(loadingProgress * 100)}%
+              </p>
+            </div>
+          )}
 
           <StartNarrator />
         </div>

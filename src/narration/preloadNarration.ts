@@ -2,7 +2,11 @@ import underwater_ambience from "../assets/audio/underwater_ambience.mp3";
 import { narrationAudio } from "./narrationAudio";
 import { addNarration, endExplorationNarration } from "./addNarration";
 
-export async function preloadNarrationAudio() {
+export async function preloadNarrationAudio(
+    onProgress?: (progress: number) => void
+) {
+    let loadedCount = 0;
+
     const sources = [
         // Intro + tutorial
         ...Object.values(narrationAudio),
@@ -31,13 +35,31 @@ export async function preloadNarrationAudio() {
                 const finish = () => {
                     audio.oncanplay = null;
                     audio.onerror = null;
+
+                    loadedCount++;
+
+                    onProgress?.(
+                        loadedCount / uniqueSources.length
+                    );
+
                     resolve();
                 };
 
                 audio.oncanplay = finish;
 
                 audio.onerror = () => {
-                    console.error(`Failed to preload audio: ${src}`);
+                    console.error(
+                        `Failed to preload audio: ${src}`
+                    );
+
+                    // Count failed assets so the progress bar
+                    // does not get stuck.
+                    loadedCount++;
+
+                    onProgress?.(
+                        loadedCount / uniqueSources.length
+                    );
+
                     resolve();
                 };
 

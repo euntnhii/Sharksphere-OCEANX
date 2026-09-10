@@ -146,6 +146,42 @@
     inset 0 2px 4px rgba(255, 255, 255, 0.5);
 }
 
+.loading-container {
+  width: 280px;
+  margin: 20px auto;
+  text-align: center;
+}
+
+.loading-bar-background {
+  width: 100%;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 40, 90, 0.25),
+    0 2px 5px rgba(0, 40, 90, 0.15);
+}
+
+.loading-bar-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 10px;
+  background: linear-gradient(90deg,
+      #5cc0ff 0%,
+      #2f95f0 50%,
+      #1f7fe0 100%);
+  transition: width 0.2s ease;
+}
+
+.loading-text {
+  margin-top: 8px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1rem;
+  color: #ffffff;
+  text-shadow: 0 2px 3px rgba(0, 40, 90, 0.4);
+}
+
 
 @keyframes pulse {
 
