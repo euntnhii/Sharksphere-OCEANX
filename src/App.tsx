@@ -486,7 +486,7 @@ export function App() {
             </div>
           </div>
           <button className="start-button" onClick={handleStart} disabled={isLoading}>
-            {isLoading ? "Setting things up..." : "Let's go!"}
+            {isLoading ? `Setting things up... ${Math.round(loadingProgress * 100)}%` : "Let's go!"}
           </button>
 
           {isLoading && (
@@ -497,10 +497,6 @@ export function App() {
                   style={{ width: `${loadingProgress * 100}%` }}
                 />
               </div>
-
-              <p className="loading-text">
-                Setting things up... {Math.round(loadingProgress * 100)}%
-              </p>
             </div>
           )}
 
