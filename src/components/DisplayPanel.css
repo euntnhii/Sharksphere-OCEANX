@@ -70,7 +70,7 @@
 }
 
 .species-name:hover {
-    color: #B3E5FC;
+    color: #ededed;
 
     transform: translateX(4px);
 }
@@ -82,8 +82,8 @@
         text-shadow: none;
     }
 
-    50% {
-        text-shadow: 0 0 10px rgb(62, 224, 148);
+    60% {
+        text-shadow: 0 0 10px rgb(146, 248, 200);
     }
 }
 
@@ -94,8 +94,8 @@
         text-shadow: none;
     }
 
-    50% {
-        text-shadow: 0 0 10px rgb(250, 211, 16);
+    60% {
+        text-shadow: 0 0 10px rgb(255, 239, 157);
     }
 }
 
@@ -106,8 +106,8 @@
         text-shadow: none;
     }
 
-    50% {
-        text-shadow: 0 0 10px rgb(232, 75, 94);
+    60% {
+        text-shadow: 0 0 10px rgb(255, 8, 54);
     }
 }
 
